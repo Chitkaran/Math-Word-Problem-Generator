@@ -7,7 +7,7 @@ import { GoogleSignInModal } from './components/GoogleSignInModal';
 import { AdminArchiveModal } from './components/AdminArchiveModal';
 import { UserAreaModal } from './components/UserAreaModal';
 import { GenerationSuccessModal } from './components/GenerationSuccessModal';
-import { MathFactsLoader } from './components/MathFactsLoader';
+import { GeneratingPopupModal } from './components/GeneratingPopupModal';
 import type { FormState, GeneratedProblem, UserProfile } from './types';
 import { generateWordProblemsStream } from './services/geminiService';
 import { DEFAULT_FORM_STATE } from './constants';
@@ -489,15 +489,6 @@ export default function App() {
             </div>
           )}
 
-          {/* Real-time Math Facts Progress Loader */}
-          {isLoading && (
-            <div className="px-4 mt-8 max-w-4xl mx-auto">
-              <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-8 md:p-12">
-                <MathFactsLoader progress={progress} />
-              </div>
-            </div>
-          )}
-
           {/* Generated Worksheet Display */}
           {generatedContent && (
             <div className="px-4 mt-8">
@@ -564,7 +555,14 @@ export default function App() {
         onUpgradePlan={handleUpgradePlan}
       />
 
-      {/* 7. GENERATION SUCCESS ACTION POPUP (Print, Generate Again, Cancel) */}
+      {/* 7. GENERATION PROGRESS MODAL POPUP (Shows circular dial, progress bar & math trivia without scrolling) */}
+      <GeneratingPopupModal
+        isOpen={isLoading}
+        progress={progress}
+        formState={formState}
+      />
+
+      {/* 8. GENERATION SUCCESS ACTION POPUP (Print, Generate Again, Cancel) */}
       <GenerationSuccessModal
         isOpen={isSuccessModalOpen}
         onClose={() => setIsSuccessModalOpen(false)}

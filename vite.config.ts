@@ -13,9 +13,5 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     // Set the base path for assets to be relative, allowing deployment to subdirectories.
     base: './',
-    define: {
-      // Expose the API key to the client-side code securely.
-      'process.env.GEMINI_API_KEY': JSON.stringify(env.GEMINI_API_KEY),
-    },
   };
 });
