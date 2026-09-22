@@ -113,9 +113,12 @@ export const AdminArchiveModal: React.FC<AdminArchiveModalProps> = ({
         {/* Modal Top Header */}
         <div className="bg-[#182449] px-6 py-5 flex items-center justify-between text-white flex-shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-indigo-600 flex items-center justify-center text-white shadow-md">
-              <ShieldAlert className="h-6 w-6" />
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              className="w-10 h-10 rounded-xl object-contain border border-white/20 bg-white/10 p-1 flex-shrink-0 shadow-md" 
+              referrerPolicy="no-referrer" 
+            />
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-xl font-black tracking-tight">Admin Vault: Teacher Generations</h2>

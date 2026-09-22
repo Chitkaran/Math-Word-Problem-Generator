@@ -95,8 +95,12 @@ export const MathFactsLoader: React.FC<MathFactsLoaderProps> = ({ progress }) =>
           </AnimatePresence>
         </div>
         
-        <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-          Calculating Problems...
+        <p className="text-xs font-bold uppercase tracking-widest text-indigo-600 transition-all">
+          {progress < 25 && "Analyzing grade & curriculum criteria..."}
+          {progress >= 25 && progress < 55 && "Crafting differentiated word problems..."}
+          {progress >= 55 && progress < 80 && "Formulating hints & student workspace..."}
+          {progress >= 80 && progress < 100 && "Compiling teacher solutions & criteria..."}
+          {progress >= 100 && "Worksheets complete!"}
         </p>
       </div>
     </div>

@@ -27,15 +27,24 @@ export const GeneratingPopupModal: React.FC<GeneratingPopupModalProps> = ({
           transition={{ duration: 0.25, ease: 'easeOut' }}
           className="w-full max-w-lg bg-white rounded-[2.5rem] shadow-[0_25px_60px_rgba(0,0,0,0.22)] border border-slate-100 p-6 md:p-8 relative overflow-hidden text-center"
         >
-          {/* Ambient Glows */}
-          <div className="absolute -top-16 -right-16 w-44 h-44 bg-indigo-100/70 rounded-full blur-3xl pointer-events-none" />
+          {/* Ambient Glows matching logo colors */}
+          <div className="absolute -top-16 -right-16 w-44 h-44 bg-purple-100/70 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-16 -left-16 w-44 h-44 bg-teal-100/70 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 flex flex-col items-center">
-            {/* Header Badge */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-100 text-indigo-700 text-xs font-bold tracking-wide uppercase mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-indigo-600 animate-pulse" />
-              <span>Generating Worksheets</span>
+            {/* Logo Image */}
+            <img 
+              src="/logo.png" 
+              alt="Math Word Problem Generator" 
+              className="w-16 h-16 rounded-2xl object-contain shadow-md shadow-purple-900/10 mb-3 border-2 border-white/90 bg-white/80 p-0.5" 
+              referrerPolicy="no-referrer" 
+            />
+
+            {/* Header Badge with active percentage in brand violet */}
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold tracking-wide uppercase mb-3 shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-purple-600 animate-spin" />
+              <span>Generating Worksheets • {Math.round(progress)}%</span>
             </div>
 
             {/* Title */}
@@ -45,8 +54,8 @@ export const GeneratingPopupModal: React.FC<GeneratingPopupModalProps> = ({
 
             {/* Concept / Grade tag */}
             {formState.mathConcept && (
-              <p className="mt-1.5 text-xs md:text-sm text-slate-500 font-medium px-4 py-1 bg-slate-50 rounded-full border border-slate-200/60 inline-block max-w-sm truncate">
-                Grade {formState.gradeLevel} • <span className="text-indigo-600 font-bold">{formState.mathConcept}</span>
+              <p className="mt-1.5 text-xs md:text-sm text-slate-500 font-medium px-4 py-1 bg-slate-50 rounded-full border border-purple-100/80 inline-block max-w-sm truncate">
+                Grade {formState.gradeLevel} • <span className="text-[#6366f1] font-bold">{formState.mathConcept}</span>
               </p>
             )}
 
@@ -57,7 +66,7 @@ export const GeneratingPopupModal: React.FC<GeneratingPopupModalProps> = ({
 
             {/* Helpful footer reassurance */}
             <div className="flex items-center justify-center gap-2 text-xs text-slate-400 font-medium mt-2">
-              <Brain className="w-3.5 h-3.5 text-indigo-400" />
+              <Brain className="w-3.5 h-3.5 text-purple-500" />
               <span>Tailoring student scaffolds & teacher keys in real-time</span>
             </div>
           </div>

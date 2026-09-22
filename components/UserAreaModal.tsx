@@ -98,16 +98,19 @@ export const UserAreaModal: React.FC<UserAreaModalProps> = ({
         {/* Top Header */}
         <div className="bg-[#182449] px-6 py-5 flex items-center justify-between text-white flex-shrink-0">
           <div className="flex items-center gap-3.5">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-indigo-900/40">
-              <GraduationCap className="h-6 w-6" />
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="Logo" 
+              className="w-11 h-11 rounded-2xl object-contain border border-white/20 bg-white/10 p-1 flex-shrink-0 shadow-lg shadow-purple-950/40" 
+              referrerPolicy="no-referrer"
+            />
             <div>
               <div className="flex items-center gap-2.5">
                 <h2 className="text-xl font-black tracking-tight">Teacher Account & Workspace</h2>
                 <span className={`px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider flex items-center gap-1 ${
                   isUnlimited 
                     ? 'bg-amber-400 text-slate-950 shadow-sm shadow-amber-500/20' 
-                    : 'bg-indigo-500/30 text-indigo-200 border border-indigo-400/30'
+                    : 'bg-purple-500/30 text-purple-200 border border-purple-400/30'
                 }`}>
                   {isUnlimited ? (
                     <>
@@ -139,11 +142,11 @@ export const UserAreaModal: React.FC<UserAreaModalProps> = ({
             onClick={() => setActiveTab('quota')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-xs md:text-sm font-bold border-b-2 transition-all cursor-pointer ${
               activeTab === 'quota'
-                ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm'
+                ? 'bg-white border-purple-600 text-purple-700 shadow-sm'
                 : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
             }`}
           >
-            <Zap className="h-4 w-4 text-indigo-500" />
+            <Zap className="h-4 w-4 text-purple-600" />
             <span>My Quota</span>
             <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-slate-100 text-slate-600 font-extrabold">
               {isUnlimited ? '∞' : `${remaining}/30`}
@@ -154,13 +157,13 @@ export const UserAreaModal: React.FC<UserAreaModalProps> = ({
             onClick={() => setActiveTab('history')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-t-xl text-xs md:text-sm font-bold border-b-2 transition-all cursor-pointer ${
               activeTab === 'history'
-                ? 'bg-white border-indigo-600 text-indigo-600 shadow-sm'
+                ? 'bg-white border-purple-600 text-purple-700 shadow-sm'
                 : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-100/80'
             }`}
           >
-            <Clock className="h-4 w-4 text-indigo-500" />
+            <Clock className="h-4 w-4 text-purple-600" />
             <span>My Past Generations</span>
-            <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-indigo-100 text-indigo-700 font-extrabold">
+            <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-purple-100 text-purple-700 font-extrabold">
               {history.length}
             </span>
           </button>

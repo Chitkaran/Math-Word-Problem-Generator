@@ -3,6 +3,8 @@ import React from 'react';
 import type { GeneratedProblem, ProblemDetail, TeacherKeyDetail } from '../types';
 import { LEVEL_NAMES } from '../constants';
 import { GoogleDocsIcon, StudentSheetIcon } from './icons';
+import { ExternalLink, Download } from 'lucide-react';
+import { generateWorksheetHtml, openPrintInNewTab, downloadWorksheetHtml } from '../services/printService';
 
 type DifferentiationLevel = 'scaffolded' | 'onLevel' | 'challenge' | 'mix';
 
@@ -73,7 +75,7 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
 
     return (
       <div key={level} className="mt-8 first:mt-0 break-inside-avoid">
-        <h3 className="text-2xl font-bold text-green-700 mb-6 pb-2 border-b border-green-200 no-print">
+        <h3 className="text-2xl font-black text-purple-800 mb-6 pb-2 border-b border-purple-200 no-print">
           {title}
         </h3>
         <div className="space-y-12">
@@ -82,7 +84,7 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
               <div className="flex justify-between items-center mb-4">
                 <p className="font-bold text-lg text-slate-800">Problem {index + 1}</p>
                 {level === 'mix' && (
-                   <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-green-100 text-green-700 rounded-full border border-green-200">
+                   <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200">
                      {pLevel}
                    </span>
                 )}
@@ -90,11 +92,11 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
               <p className="text-lg leading-relaxed mb-6 text-slate-700 whitespace-pre-wrap">{problem.problemText}</p>
               
               {problem.stepByStepHints && problem.stepByStepHints.length > 0 && (
-                <div className="mb-6 p-5 border border-green-100 bg-green-50/30 rounded-xl">
-                  <h6 className="font-bold text-sm text-green-800 mb-3 flex items-center gap-2">
+                <div className="mb-6 p-5 border border-amber-200 bg-amber-50/50 rounded-xl">
+                  <h6 className="font-bold text-sm text-amber-900 mb-3 flex items-center gap-2">
                     <span className="text-lg">💡</span> Step-by-Step Hints
                   </h6>
-                  <ol className="list-decimal list-inside text-slate-600 space-y-2">
+                  <ol className="list-decimal list-inside text-slate-700 space-y-2">
                     {problem.stepByStepHints.map((hint, hintIndex) => (
                       <li key={hintIndex} className="pl-2">{hint}</li>
                     ))}
@@ -146,7 +148,7 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
 
     return (
       <div key={level} className="mt-8 first:mt-0 break-inside-avoid">
-        <h3 className="text-2xl font-bold text-green-700 mb-6 pb-2 border-b border-green-200 no-print">
+        <h3 className="text-2xl font-black text-purple-800 mb-6 pb-2 border-b border-purple-200 no-print">
           {title}
         </h3>
         <div className="space-y-10">
@@ -155,7 +157,7 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
               <div className="flex justify-between items-center mb-4">
                 <h4 className="text-xl font-black text-slate-800">Problem {index + 1} Answer Key</h4>
                 {level === 'mix' && (
-                   <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-green-100 text-green-700 rounded-full border border-green-200">
+                   <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200">
                      {kLevel}
                    </span>
                 )}
@@ -163,15 +165,15 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div>
-                    <h5 className="text-sm font-bold text-green-700 uppercase tracking-wider mb-2">Complete Solution</h5>
-                    <p className="text-slate-700 whitespace-pre-wrap bg-slate-50 p-3 rounded-lg border border-slate-100">{key.completeSolution}</p>
+                    <h5 className="text-sm font-bold text-purple-800 uppercase tracking-wider mb-2">Complete Solution</h5>
+                    <p className="text-slate-700 whitespace-pre-wrap bg-purple-50/40 p-3 rounded-lg border border-purple-100 border-l-4 border-l-[#7c3aed]">{key.completeSolution}</p>
                   </div>
                   <div>
-                    <h5 className="text-sm font-bold text-green-700 uppercase tracking-wider mb-2">Multiple Strategies</h5>
+                    <h5 className="text-sm font-bold text-teal-800 uppercase tracking-wider mb-2">Multiple Strategies</h5>
                     <ul className="space-y-1.5">
                       {key.multipleStrategies.map((s, i) => (
                         <li key={i} className="flex items-start gap-2 text-slate-600">
-                          <span className="text-green-500 mt-1">•</span>
+                          <span className="text-teal-500 mt-1">•</span>
                           <span>{s}</span>
                         </li>
                       ))}
@@ -180,7 +182,7 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
                 </div>
                 <div className="space-y-4">
                   <div>
-                    <h5 className="text-sm font-bold text-amber-700 uppercase tracking-wider mb-2">Common Misconceptions</h5>
+                    <h5 className="text-sm font-bold text-amber-800 uppercase tracking-wider mb-2">Common Misconceptions</h5>
                     <ul className="space-y-1.5">
                       {key.commonMisconceptions.map((m, i) => (
                         <li key={i} className="flex items-start gap-2 text-slate-600">
@@ -191,11 +193,11 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
                     </ul>
                   </div>
                   <div>
-                    <h5 className="text-sm font-bold text-blue-700 uppercase tracking-wider mb-2">Success Criteria</h5>
+                    <h5 className="text-sm font-bold text-indigo-800 uppercase tracking-wider mb-2">Success Criteria</h5>
                     <ul className="space-y-1.5">
                       {key.successCriteria.map((c, i) => (
                         <li key={i} className="flex items-start gap-2 text-slate-600">
-                          <span className="text-blue-500 mt-1">✓</span>
+                          <span className="text-indigo-500 mt-1">✓</span>
                           <span>{c}</span>
                         </li>
                       ))}
@@ -216,18 +218,47 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
       {activeDifferentiationLevel && (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 no-print gap-4">
            <div className="bg-slate-100 p-1 rounded-lg flex space-x-1">
-            <button onClick={() => setActiveView('student')} className={`px-4 py-2 rounded-md font-semibold transition-colors ${activeView === 'student' ? 'bg-white text-green-600 shadow' : 'text-slate-600 hover:bg-slate-200'}`}>Student Worksheet</button>
-            <button onClick={() => setActiveView('teacher')} className={`px-4 py-2 rounded-md font-semibold transition-colors ${activeView === 'teacher' ? 'bg-white text-green-600 shadow' : 'text-slate-600 hover:bg-slate-200'}`}>Teacher Key</button>
+            <button onClick={() => setActiveView('student')} className={`px-4 py-2 rounded-md font-semibold transition-colors ${activeView === 'student' ? 'bg-white text-purple-700 shadow' : 'text-slate-600 hover:bg-slate-200'}`}>Student Worksheet</button>
+            <button onClick={() => setActiveView('teacher')} className={`px-4 py-2 rounded-md font-semibold transition-colors ${activeView === 'teacher' ? 'bg-white text-purple-700 shadow' : 'text-slate-600 hover:bg-slate-200'}`}>Teacher Key</button>
           </div>
           
-          <div className="flex items-center space-x-3">
-            <button onClick={onPrint} className="flex items-center space-x-2 text-slate-600 hover:text-green-600 hover:bg-green-50 p-2 rounded-md transition-colors font-semibold text-sm">
+          <div className="flex flex-wrap items-center gap-2">
+            <button 
+              onClick={onPrint} 
+              className="flex items-center space-x-2 bg-gradient-to-r from-[#7c3aed] to-[#4f46e5] hover:from-[#6d28d9] hover:to-[#4338ca] text-white px-3.5 py-2 rounded-xl transition-all font-semibold text-xs sm:text-sm shadow-sm hover:shadow cursor-pointer"
+              title="Print worksheet using system dialog"
+            >
                 <StudentSheetIcon />
                 <span>Print {LEVEL_NAMES[activeDifferentiationLevel]} {activeView === 'student' ? 'Worksheet' : 'Key'}</span>
             </button>
-            <button className="flex items-center space-x-2 text-slate-400 cursor-not-allowed p-2 rounded-md font-semibold text-sm" disabled>
-                <GoogleDocsIcon />
-                <span>Export to Google Docs</span>
+            <button 
+              onClick={() => {
+                const html = generateWorksheetHtml(content, activeDifferentiationLevel, activeView, {
+                  mathConcept: printInfo.mathConcept,
+                  gradeLevel: printInfo.gradeLevel,
+                  numberOfQuestions: printInfo.numberOfQuestions
+                });
+                openPrintInNewTab(html);
+              }}
+              className="flex items-center space-x-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-3 py-2 rounded-xl transition-all font-semibold text-xs sm:text-sm border border-indigo-200 cursor-pointer"
+              title="Open clean printable worksheet in a dedicated tab"
+            >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>Open Tab</span>
+            </button>
+            <button 
+              onClick={() => {
+                downloadWorksheetHtml(content, activeDifferentiationLevel, activeView, {
+                  mathConcept: printInfo.mathConcept,
+                  gradeLevel: printInfo.gradeLevel,
+                  numberOfQuestions: printInfo.numberOfQuestions
+                });
+              }}
+              className="flex items-center space-x-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-xl transition-all font-semibold text-xs sm:text-sm border border-slate-200 cursor-pointer"
+              title="Download standalone printable HTML file"
+            >
+                <Download className="w-3.5 h-3.5" />
+                <span>Save</span>
             </button>
           </div>
         </div>
@@ -242,8 +273,8 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
                 onClick={() => setActiveDifferentiationLevel(level)}
                 className={`px-4 py-2 font-semibold text-sm rounded-t-md transition-colors border-b-2 ${
                   activeDifferentiationLevel === level
-                    ? 'border-green-600 text-green-700'
-                    : 'border-transparent text-slate-500 hover:text-green-600 hover:border-slate-300'
+                    ? 'border-purple-600 text-purple-700'
+                    : 'border-transparent text-slate-500 hover:text-purple-600 hover:border-slate-300'
                 }`}
               >
                 {LEVEL_NAMES[level]}

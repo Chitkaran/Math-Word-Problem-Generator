@@ -10,6 +10,7 @@ import { GenerationSuccessModal } from './components/GenerationSuccessModal';
 import { GeneratingPopupModal } from './components/GeneratingPopupModal';
 import type { FormState, GeneratedProblem, UserProfile } from './types';
 import { generateWordProblemsStream } from './services/geminiService';
+import { printWorksheetDocument } from './services/printService';
 import { DEFAULT_FORM_STATE } from './constants';
 import { auth, db, handleFirestoreError, OperationType } from './firebase';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
@@ -299,8 +300,23 @@ export default function App() {
     setIsLoading(true);
     setError(null);
     setGeneratedContent(null);
-    setProgress(0);
+    setProgress(5);
     setActiveDifferentiationLevel(null);
+
+    // Dynamic progress ticker to ensure the user sees continuous percentage progress
+    let tickerVal = 5;
+    const ticker = setInterval(() => {
+      if (tickerVal < 30) {
+        tickerVal += 3.5;
+      } else if (tickerVal < 65) {
+        tickerVal += 2;
+      } else if (tickerVal < 88) {
+        tickerVal += 1.2;
+      } else if (tickerVal < 94) {
+        tickerVal += 0.4;
+      }
+      setProgress(prev => Math.max(prev, Math.min(94, Math.round(tickerVal))));
+    }, 180);
 
     try {
       // Track generation event in Google Sheets
@@ -316,18 +332,22 @@ export default function App() {
 
       const stream = await generateWordProblemsStream(formState);
       let accumulatedText = '';
-      const estimatedTotal = 3500; 
+      const estimatedTotal = 3200; 
 
       for await (const chunk of stream) {
         const chunkText = chunk.text;
         if (chunkText) {
           accumulatedText += chunkText;
-          const currentProgress = Math.min(95, (accumulatedText.length / estimatedTotal) * 100);
-          setProgress(currentProgress);
+          const streamProgress = Math.min(95, Math.round((accumulatedText.length / estimatedTotal) * 100));
+          setProgress(prev => Math.max(prev, streamProgress));
         }
       }
       
+      clearInterval(ticker);
       setProgress(100);
+      // Give the user a moment to see the completed 100% dial
+      await new Promise(r => setTimeout(r, 350));
+
       const content = JSON.parse(accumulatedText);
       setGeneratedContent(content);
 
@@ -374,15 +394,31 @@ export default function App() {
       setIsSuccessModalOpen(true);
 
     } catch (err) {
+      clearInterval(ticker);
       setError(err instanceof Error ? err.message : 'An error occurred during generation.');
       console.error(err);
     } finally {
+      clearInterval(ticker);
       setIsLoading(false);
     }
   }, [formState, user, userProfile]);
 
   const handlePrint = () => {
-    window.print();
+    if (generatedContent) {
+      printWorksheetDocument(
+        generatedContent,
+        activeDifferentiationLevel || 'mix',
+        activeView,
+        {
+          mathConcept: formState.mathConcept,
+          gradeLevel: formState.gradeLevel,
+          numberOfQuestions: formState.numberOfQuestions,
+          context: formState.context
+        }
+      );
+    } else {
+      window.print();
+    }
   };
 
   const handleGenerateAgain = useCallback(() => {
@@ -394,20 +430,24 @@ export default function App() {
   const isBlurred = !isAuthChecking && !user;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EBF5FB] via-[#F3F9FF] to-[#E6F7F4] relative overflow-x-hidden font-sans text-slate-800 selection:bg-indigo-500 selection:text-white">
+    <div className="min-h-screen bg-gradient-to-b from-[#EEF2FF] via-[#F5F3FF] to-[#E0F2FE] relative overflow-x-hidden font-sans text-slate-800 selection:bg-purple-600 selection:text-white">
       
-      {/* Decorative Pastel Background Blobs */}
+      {/* Decorative Pastel Background Blobs matching logo palette */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden no-print select-none">
-        {/* Top Left Sky Blue Glow */}
-        <div className="absolute -top-[12%] -left-[10%] w-[45%] h-[45%] bg-sky-200/50 blur-[130px] rounded-full" />
-        {/* Center Right Cyan Glow */}
-        <div className="absolute top-[25%] -right-[8%] w-[45%] h-[45%] bg-teal-100/40 blur-[140px] rounded-full" />
-        {/* Bottom Left Mint Glow */}
-        <div className="absolute -bottom-[10%] -left-[5%] w-[50%] h-[45%] bg-emerald-100/40 blur-[120px] rounded-full" />
+        {/* Top Left Lavender/Violet Glow */}
+        <div className="absolute -top-[12%] -left-[10%] w-[45%] h-[45%] bg-purple-200/50 blur-[130px] rounded-full" />
+        {/* Center Right Warm Gold Pencil Glow */}
+        <div className="absolute top-[25%] -right-[8%] w-[45%] h-[45%] bg-amber-200/40 blur-[140px] rounded-full" />
+        {/* Bottom Left Mint Speech Bubble Glow */}
+        <div className="absolute -bottom-[10%] -left-[5%] w-[50%] h-[45%] bg-teal-200/40 blur-[130px] rounded-full" />
+        {/* Center Soft Periwinkle Glow */}
+        <div className="absolute top-[40%] left-[20%] w-[40%] h-[40%] bg-indigo-200/30 blur-[150px] rounded-full" />
       </div>
 
       {/* 1. TOP TICKER (Shown at the very top with live fluctuating counters) */}
-      <TopTicker />
+      <div className="no-print">
+        <TopTicker />
+      </div>
 
       {/* Main Page Content Wrapper (Blurred if user is not logged in) */}
       <div className={`relative z-10 transition-all duration-300 ${isBlurred ? 'filter blur-md pointer-events-none select-none' : ''}`}>
@@ -444,7 +484,7 @@ export default function App() {
           </div>
 
           {/* Bottom Left Playful Doodle: "Small Steps Big Learning" */}
-          <div className="hidden md:flex absolute -bottom-16 left-6 flex-col select-none pointer-events-none z-0">
+          <div className="no-print hidden md:flex absolute -bottom-16 left-6 flex-col select-none pointer-events-none z-0">
             <div className="relative pl-7">
               {/* 3 Yellow radiating rays on left */}
               <div className="absolute left-0 top-3 flex flex-col gap-1.5 items-center">
@@ -467,7 +507,7 @@ export default function App() {
           </div>
 
           {/* Bottom Right Playful Doodle: Heart & Stars */}
-          <div className="hidden md:flex absolute -bottom-12 right-10 items-center gap-3 select-none pointer-events-none z-0">
+          <div className="no-print hidden md:flex absolute -bottom-12 right-10 items-center gap-3 select-none pointer-events-none z-0">
             {/* Outlined cute sky blue heart */}
             <svg className="w-9 h-9 text-sky-400 stroke-current fill-none transform -rotate-12" viewBox="0 0 24 24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
@@ -513,65 +553,68 @@ export default function App() {
         </main>
       </div>
 
-      {/* 4. GOOGLE SIGN-IN MODAL (Centered over blurred page if user is not logged in) */}
-      {(isBlurred || showSignInModal) && (
-        <GoogleSignInModal onSuccess={() => setShowSignInModal(false)} />
-      )}
+      {/* Overlay Modals (All hidden during printing) */}
+      <div className="no-print">
+        {/* 4. GOOGLE SIGN-IN MODAL (Centered over blurred page if user is not logged in) */}
+        {(isBlurred || showSignInModal) && (
+          <GoogleSignInModal onSuccess={() => setShowSignInModal(false)} />
+        )}
 
-      {/* 5. ADMIN ARCHIVE VAULT MODAL (Only rendered & viewable by chitkaran@gmail.com) */}
-      {isAdmin && (
-        <AdminArchiveModal
-          isOpen={isAdminArchiveOpen}
-          onClose={() => setIsAdminArchiveOpen(false)}
-          onLoadWorksheet={(loadedContent, concept, grade, count) => {
-            setGeneratedContent(loadedContent);
-            setFormState(prev => ({
-              ...prev,
-              mathConcept: concept,
-              gradeLevel: grade,
-              numberOfQuestions: count
-            }));
-            const availableLevels = Object.keys(loadedContent.studentWorksheet).filter(level => {
-              const key = level as keyof typeof loadedContent.studentWorksheet;
-              return loadedContent.studentWorksheet[key] && loadedContent.studentWorksheet[key]!.length > 0;
-            });
-            if (availableLevels.length > 1) {
-              setActiveDifferentiationLevel('mix');
-            } else if (availableLevels.length === 1) {
-              setActiveDifferentiationLevel(availableLevels[0] as 'scaffolded' | 'onLevel' | 'challenge');
-            }
-          }}
+        {/* 5. ADMIN ARCHIVE VAULT MODAL (Only rendered & viewable by chitkaran@gmail.com) */}
+        {isAdmin && (
+          <AdminArchiveModal
+            isOpen={isAdminArchiveOpen}
+            onClose={() => setIsAdminArchiveOpen(false)}
+            onLoadWorksheet={(loadedContent, concept, grade, count) => {
+              setGeneratedContent(loadedContent);
+              setFormState(prev => ({
+                ...prev,
+                mathConcept: concept,
+                gradeLevel: grade,
+                numberOfQuestions: count
+              }));
+              const availableLevels = Object.keys(loadedContent.studentWorksheet).filter(level => {
+                const key = level as keyof typeof loadedContent.studentWorksheet;
+                return loadedContent.studentWorksheet[key] && loadedContent.studentWorksheet[key]!.length > 0;
+              });
+              if (availableLevels.length > 1) {
+                setActiveDifferentiationLevel('mix');
+              } else if (availableLevels.length === 1) {
+                setActiveDifferentiationLevel(availableLevels[0] as 'scaffolded' | 'onLevel' | 'challenge');
+              }
+            }}
+          />
+        )}
+
+        {/* 6. TEACHER USER AREA MODAL (My past generations, free quota tracking, and upgrade) */}
+        <UserAreaModal
+          isOpen={isUserAreaOpen}
+          onClose={() => setIsUserAreaOpen(false)}
+          userProfile={userProfile}
+          history={history}
+          onLoadWorksheet={handleLoadWorksheet}
+          onDeleteWorksheet={handleDeleteWorksheet}
+          onUpgradePlan={handleUpgradePlan}
         />
-      )}
 
-      {/* 6. TEACHER USER AREA MODAL (My past generations, free quota tracking, and upgrade) */}
-      <UserAreaModal
-        isOpen={isUserAreaOpen}
-        onClose={() => setIsUserAreaOpen(false)}
-        userProfile={userProfile}
-        history={history}
-        onLoadWorksheet={handleLoadWorksheet}
-        onDeleteWorksheet={handleDeleteWorksheet}
-        onUpgradePlan={handleUpgradePlan}
-      />
+        {/* 7. GENERATION PROGRESS MODAL POPUP (Shows circular dial, progress bar & math trivia without scrolling) */}
+        <GeneratingPopupModal
+          isOpen={isLoading}
+          progress={progress}
+          formState={formState}
+        />
 
-      {/* 7. GENERATION PROGRESS MODAL POPUP (Shows circular dial, progress bar & math trivia without scrolling) */}
-      <GeneratingPopupModal
-        isOpen={isLoading}
-        progress={progress}
-        formState={formState}
-      />
-
-      {/* 8. GENERATION SUCCESS ACTION POPUP (Print, Generate Again, Cancel) */}
-      <GenerationSuccessModal
-        isOpen={isSuccessModalOpen}
-        onClose={() => setIsSuccessModalOpen(false)}
-        onPrint={handlePrint}
-        onGenerateAgain={handleGenerateAgain}
-        content={generatedContent}
-        formState={formState}
-        onOpenUserArea={() => setIsUserAreaOpen(true)}
-      />
+        {/* 8. GENERATION SUCCESS ACTION POPUP (Print, Generate Again, Cancel) */}
+        <GenerationSuccessModal
+          isOpen={isSuccessModalOpen}
+          onClose={() => setIsSuccessModalOpen(false)}
+          onPrint={handlePrint}
+          onGenerateAgain={handleGenerateAgain}
+          content={generatedContent}
+          formState={formState}
+          onOpenUserArea={() => setIsUserAreaOpen(true)}
+        />
+      </div>
 
     </div>
   );

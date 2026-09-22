@@ -125,7 +125,10 @@ async function startServer() {
     try {
       res.setHeader('Content-Type', 'text/plain; charset=utf-8');
       res.setHeader('Transfer-Encoding', 'chunked');
-      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Cache-Control', 'no-cache, no-transform');
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('X-Accel-Buffering', 'no');
+      res.flushHeaders();
 
       let stream;
       try {

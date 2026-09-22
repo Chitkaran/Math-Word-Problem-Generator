@@ -81,26 +81,34 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           
           {/* Left Brand Area */}
           <div className="flex items-center gap-3 md:gap-4">
-            {/* Gradient Logo with Graduation Cap */}
-            <div className="w-10 h-10 md:w-11 md:h-11 rounded-xl bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-md flex-shrink-0">
-              <GraduationCap className="h-6 w-6" />
+            {/* Logo Image */}
+            <img 
+              src="/logo.png" 
+              alt="Math Word Problem Generator Logo" 
+              className="w-10 h-10 md:w-11 md:h-11 rounded-xl object-contain border border-white/20 bg-white/10 p-0.5 flex-shrink-0 shadow-md shadow-purple-950/40" 
+              referrerPolicy="no-referrer"
+            />
+
+            {/* App Name matching logo branding */}
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight flex items-center">
+                Math Word Problem
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] md:text-xs font-black uppercase tracking-wider bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-sm border border-purple-300/30 hidden sm:inline-block">
+                Generator
+              </span>
             </div>
 
-            {/* App Name */}
-            <h1 className="text-xl md:text-2xl font-black text-white tracking-tight flex items-center">
-              AI Teacher Tools
-            </h1>
-
             {/* Divider */}
-            <span className="text-slate-500 font-light hidden sm:inline text-lg">|</span>
+            <span className="text-slate-500 font-light hidden lg:inline text-lg">|</span>
 
             {/* Tagline */}
-            <p className="text-slate-300 text-xs md:text-sm font-medium hidden sm:inline">
+            <p className="text-slate-300 text-xs md:text-sm font-medium hidden lg:inline">
               By a Teacher, For the Teachers
             </p>
 
             {lastSync && user && (
-              <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-0.5 bg-emerald-950/60 text-emerald-400 rounded-full border border-emerald-500/30 text-[10px] font-bold uppercase tracking-wider ml-2">
+              <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 bg-teal-950/60 text-teal-300 rounded-full border border-teal-500/30 text-[10px] font-bold uppercase tracking-wider ml-2">
                 <Clock className="h-3 w-3" />
                 <span>Synced {new Date(lastSync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
@@ -316,10 +324,10 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 </div>
               </div>
             ) : (
-              /* Sign In Button matching screenshot pill style */
+              /* Sign In Button matching logo violet pill style */
               <button 
                 onClick={handleSignIn}
-                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-sm rounded-full shadow-md shadow-indigo-900/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-indigo-700 hover:from-purple-500 hover:to-indigo-600 text-white font-bold text-sm rounded-full shadow-md shadow-purple-950/40 border border-purple-400/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <User className="h-4 w-4 fill-white/20" />
                 <span>Sign In</span>

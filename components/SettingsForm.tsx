@@ -104,24 +104,24 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             
             {/* Left Header Title & Subtitle */}
             <div className="flex items-start gap-4 md:gap-5 max-w-2xl">
-              {/* Blue Math Operators Tile with Ray Accents */}
+              {/* 3D Purple Math Cube with Ray Accents matching Logo */}
               <div className="relative flex-shrink-0 mt-1">
-                {/* 3 Radiating accent strokes on top-left */}
+                {/* 3 Radiating accent strokes on top-left in warm gold and mint matching logo */}
                 <div className="absolute -top-3 -left-3 flex gap-1 pointer-events-none select-none">
-                  <span className="w-1.5 h-3 bg-indigo-500 rounded-full -rotate-45 block" />
-                  <span className="w-1.5 h-3.5 bg-indigo-400 rounded-full -rotate-15 block -mt-1" />
-                  <span className="w-1.5 h-3 bg-indigo-400 rounded-full rotate-25 block" />
+                  <span className="w-1.5 h-3 bg-amber-400 rounded-full -rotate-45 block" />
+                  <span className="w-1.5 h-3.5 bg-amber-300 rounded-full -rotate-15 block -mt-1" />
+                  <span className="w-1.5 h-3 bg-teal-400 rounded-full rotate-25 block" />
                 </div>
                 <div className="absolute top-1/2 -left-3.5 -translate-y-1/2 pointer-events-none select-none">
-                  <span className="w-2.5 h-1 bg-indigo-400 rounded-full block" />
+                  <span className="w-2.5 h-1 bg-amber-400 rounded-full block" />
                 </div>
 
-                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-blue-600 text-white flex flex-col items-center justify-center shadow-lg shadow-indigo-300/50 select-none">
-                  <div className="flex items-center justify-center gap-2 font-bold text-lg md:text-xl leading-none">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-[#7c3aed] via-[#6366f1] to-[#4f46e5] text-white flex flex-col items-center justify-center shadow-lg shadow-purple-400/40 select-none border border-white/20">
+                  <div className="flex items-center justify-center gap-2 font-black text-lg md:text-xl leading-none">
                     <span>+</span>
                     <span>−</span>
                   </div>
-                  <div className="flex items-center justify-center gap-2 font-bold text-lg md:text-xl leading-none mt-1">
+                  <div className="flex items-center justify-center gap-2 font-black text-lg md:text-xl leading-none mt-1">
                     <span>×</span>
                     <span>÷</span>
                   </div>
@@ -130,8 +130,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
 
               {/* Title & Description */}
               <div className="space-y-2">
-                <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-                  Math <span className="text-indigo-600">Word Problem</span> Generator
+                <h2 className="text-2xl md:text-4xl font-black text-slate-900 tracking-tight leading-tight flex items-center flex-wrap gap-2">
+                  <span>Math <span className="text-[#6366f1]">Word Problem</span></span>
+                  <span className="inline-block px-3 py-1 rounded-full text-xs md:text-sm font-black uppercase tracking-wider bg-gradient-to-r from-purple-600 via-purple-500 to-indigo-600 text-white shadow-sm border border-purple-300/30 align-middle">
+                    Generator
+                  </span>
                 </h2>
                 <div className="text-slate-500 text-sm md:text-base font-normal leading-relaxed space-y-0.5">
                   <p>Create engaging, curriculum-aligned math word problems in seconds.</p>
@@ -140,60 +143,16 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               </div>
             </div>
 
-            {/* Right Side Notepad & Pencil Illustration */}
-            <div className="hidden lg:flex items-center justify-center relative flex-shrink-0 w-52 h-44 select-none pointer-events-none">
-              {/* Pastel Background Blobs */}
-              <div className="absolute top-2 left-2 w-36 h-36 bg-amber-100/70 rounded-full blur-xl" />
-              <div className="absolute bottom-1 right-2 w-36 h-36 bg-teal-100/70 rounded-full blur-xl" />
-
-              {/* Notebook + Pencil SVG Graphic */}
-              <svg className="w-48 h-40 relative z-10 filter drop-shadow-md" viewBox="0 0 200 160" fill="none">
-                {/* Spiral notebook rotated slightly */}
-                <g transform="rotate(8 100 80)">
-                  {/* Notebook Base Sheet */}
-                  <rect x="55" y="20" width="90" height="110" rx="10" fill="#FFFFFF" stroke="#60A5FA" strokeWidth="2.5" />
-                  
-                  {/* Inner Page lines */}
-                  <line x1="75" y1="52" x2="135" y2="52" stroke="#E2E8F0" strokeWidth="1.5" />
-                  <line x1="75" y1="72" x2="135" y2="72" stroke="#E2E8F0" strokeWidth="1.5" />
-                  <line x1="75" y1="92" x2="135" y2="92" stroke="#E2E8F0" strokeWidth="1.5" />
-                  
-                  {/* Spiral rings on left */}
-                  {[28, 40, 52, 64, 76, 88, 100, 112].map((y, idx) => (
-                    <g key={idx}>
-                      <ellipse cx="55" cy={y} rx="4" ry="2.5" fill="#1E40AF" />
-                      <circle cx="53" cy={y} r="1.5" fill="#93C5FD" />
-                    </g>
-                  ))}
-
-                  {/* Math Operators drawn on notebook */}
-                  <text x="82" y="66" fontFamily="sans-serif" fontSize="18" fontWeight="bold" fill="#3B82F6">+</text>
-                  <text x="112" y="66" fontFamily="sans-serif" fontSize="18" fontWeight="bold" fill="#3B82F6">−</text>
-                  <text x="82" y="96" fontFamily="sans-serif" fontSize="18" fontWeight="bold" fill="#6366F1">×</text>
-                  <text x="112" y="96" fontFamily="sans-serif" fontSize="18" fontWeight="bold" fill="#6366F1">÷</text>
-                </g>
-
-                {/* Yellow Pencil leaning against notebook */}
-                <g transform="rotate(-36 140 100)">
-                  {/* Pencil Wood Body */}
-                  <rect x="110" y="20" width="14" height="85" rx="3" fill="#FBBF24" stroke="#D97706" strokeWidth="1.5" />
-                  {/* Pencil Strips */}
-                  <line x1="115" y1="20" x2="115" y2="105" stroke="#F59E0B" strokeWidth="1.5" />
-                  {/* Metal band */}
-                  <rect x="110" y="15" width="14" height="7" fill="#CBD5E1" stroke="#94A3B8" strokeWidth="1" />
-                  {/* Pink Eraser */}
-                  <rect x="110" y="7" width="14" height="9" rx="3" fill="#F472B6" />
-                  {/* Sharpened tip */}
-                  <polygon points="110,105 124,105 117,125" fill="#FDE68A" stroke="#D97706" strokeWidth="1" />
-                  {/* Graphite point */}
-                  <polygon points="114,118 120,118 117,125" fill="#1E293B" />
-                </g>
-
-                {/* Playful Confetti / Sparkle Rays */}
-                <path d="M165 30L172 26" stroke="#6366F1" strokeWidth="2" strokeLinecap="round" />
-                <path d="M175 40L182 44" stroke="#6366F1" strokeWidth="2" strokeLinecap="round" />
-                <circle cx="178" cy="30" r="2" fill="#F59E0B" />
-              </svg>
+            {/* Right Side: Official 3D Logo Presentation */}
+            <div className="hidden lg:flex items-center justify-center relative flex-shrink-0 w-44 h-44 select-none">
+              {/* Soft ambient logo glow matching logo palette */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-purple-300/50 via-indigo-200/40 to-amber-200/50 rounded-3xl blur-2xl pointer-events-none" />
+              <img 
+                src="/logo.png" 
+                alt="Math Word Problem Generator" 
+                className="w-40 h-40 object-contain rounded-3xl relative z-10 shadow-xl shadow-purple-900/15 border-2 border-white/90 bg-white/50 p-1 hover:scale-105 transition-transform duration-300" 
+                referrerPolicy="no-referrer"
+              />
             </div>
 
           </div>
@@ -250,8 +209,8 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                       className={`
                         flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl text-sm font-bold transition-all cursor-pointer
                         ${isActive 
-                          ? 'bg-gradient-to-r from-blue-600 via-indigo-600 to-indigo-600 text-white shadow-md shadow-indigo-200/60 scale-[1.02]' 
-                          : 'bg-white hover:bg-slate-50 border border-slate-200/80 text-slate-700 hover:border-slate-300'
+                          ? 'bg-gradient-to-r from-purple-600 via-indigo-600 to-indigo-700 text-white shadow-md shadow-purple-300/60 scale-[1.02] border border-purple-400/40' 
+                          : 'bg-white hover:bg-slate-50 border border-slate-200/80 text-slate-700 hover:border-purple-200'
                         }
                       `}
                     >
@@ -269,7 +228,7 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               {/* Grade Level */}
               <div className="space-y-2.5">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-blue-100/90 text-indigo-600 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center">
                     <GraduationCap className="h-4 w-4" />
                   </div>
                   <label htmlFor="gradeLevel" className="font-bold text-slate-900 text-base tracking-tight">
@@ -283,20 +242,20 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                     name="gradeLevel"
                     value={formState.gradeLevel}
                     onChange={handleInputChange}
-                    className="w-full bg-white border border-blue-200/80 rounded-2xl py-3.5 px-5 text-slate-700 font-medium text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none cursor-pointer"
+                    className="w-full bg-white border border-purple-100 hover:border-purple-200 rounded-2xl py-3.5 px-5 text-slate-700 font-medium text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none cursor-pointer"
                   >
                     {GRADE_LEVELS.map(g => (
                       <option key={g} value={g}>Grade {g}</option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-indigo-500 pointer-events-none" />
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-purple-600 pointer-events-none" />
                 </div>
               </div>
 
               {/* Difficulty */}
               <div className="space-y-2.5">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-blue-100/90 text-indigo-600 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center">
                     <Signal className="h-4 w-4" />
                   </div>
                   <label htmlFor="difficulty" className="font-bold text-slate-900 text-base tracking-tight">
@@ -309,21 +268,21 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                     id="difficulty"
                     value={getDifficulty()}
                     onChange={handleDifficultyChange}
-                    className="w-full bg-white border border-blue-200/80 rounded-2xl py-3.5 px-5 text-slate-700 font-medium text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none cursor-pointer"
+                    className="w-full bg-white border border-purple-100 hover:border-purple-200 rounded-2xl py-3.5 px-5 text-slate-700 font-medium text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none cursor-pointer"
                   >
-                    <option value="Medium">Medium</option>
+                    <option value="Medium">Medium (On-Level)</option>
                     <option value="Easy">Easy (Scaffolded)</option>
                     <option value="Hard">Hard (Challenge)</option>
                     <option value="All Levels">All Levels (Mixed)</option>
                   </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-indigo-500 pointer-events-none" />
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-purple-600 pointer-events-none" />
                 </div>
               </div>
 
               {/* Number of Questions */}
               <div className="space-y-2.5">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-7 h-7 rounded-full bg-blue-100/90 text-indigo-600 flex items-center justify-center">
+                  <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center">
                     <FileText className="h-4 w-4" />
                   </div>
                   <label htmlFor="numberOfQuestions" className="font-bold text-slate-900 text-base tracking-tight">
@@ -337,19 +296,19 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                     name="numberOfQuestions"
                     value={formState.numberOfQuestions}
                     onChange={handleInputChange}
-                    className="w-full bg-white border border-blue-200/80 rounded-2xl py-3.5 px-5 text-slate-700 font-medium text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all appearance-none cursor-pointer"
+                    className="w-full bg-white border border-purple-100 hover:border-purple-200 rounded-2xl py-3.5 px-5 text-slate-700 font-medium text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all appearance-none cursor-pointer"
                   >
                     {[3, 5, 8, 10, 15, 20].map(n => (
                       <option key={n} value={n}>{n}</option>
                     ))}
                   </select>
-                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-indigo-500 pointer-events-none" />
+                  <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 h-5 w-5 text-purple-600 pointer-events-none" />
                 </div>
               </div>
 
             </div>
 
-            {/* 4. GENERATE QUESTIONS BUTTON (Centered Pill) */}
+            {/* 4. GENERATE QUESTIONS BUTTON (Centered Pill matching logo Generator pill) */}
             <div className="flex flex-col items-center justify-center pt-4 md:pt-6 space-y-2.5">
               <button
                 type="button"
@@ -357,10 +316,10 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
                 disabled={isLoading || !formState.mathConcept.trim()}
                 className={`
                   flex items-center justify-center gap-3 px-10 py-4 
-                  bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 
-                  hover:from-blue-700 hover:to-purple-700 
-                  text-white font-bold text-base md:text-lg 
-                  rounded-full shadow-lg shadow-indigo-300/40 
+                  bg-gradient-to-r from-[#8b5cf6] via-[#7c3aed] to-[#6366f1] 
+                  hover:from-[#7c3aed] hover:to-[#4f46e5] 
+                  text-white font-black text-base md:text-lg 
+                  rounded-full shadow-xl shadow-purple-500/25 border border-purple-300/30
                   transition-all duration-200 transform hover:scale-105 active:scale-95 
                   disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none
                   cursor-pointer
