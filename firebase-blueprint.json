@@ -1,0 +1,69 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile with plan details, monthly quota, and usage tracking.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "UID of the user." },
+        "email": { "type": "string", "description": "Email address of the user." },
+        "displayName": { "type": "string", "description": "Name of the teacher." },
+        "plan": { "type": "string", "enum": ["free", "unlimited"], "description": "Subscription plan." },
+        "quotaLimit": { "type": "number", "description": "Monthly quota limit (e.g. 30)." },
+        "generationsUsedThisMonth": { "type": "number", "description": "Generations used in currentMonth." },
+        "currentMonth": { "type": "string", "description": "Current month in YYYY-MM format." },
+        "lastGeneratedAt": { "type": "string", "format": "date-time", "description": "Timestamp of last generation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Last profile update timestamp." }
+      },
+      "required": ["userId", "email", "plan", "quotaLimit", "generationsUsedThisMonth", "currentMonth", "updatedAt"]
+    },
+    "Worksheet": {
+      "title": "Worksheet",
+      "description": "A generated math worksheet with student problems and teacher keys.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique ID for the worksheet." },
+        "userId": { "type": "string", "description": "UID of the owner." },
+        "mathConcept": { "type": "string", "description": "The math topic." },
+        "gradeLevel": { "type": "string", "description": "The grade level." },
+        "numberOfQuestions": { "type": "number", "description": "Number of questions per level." },
+        "content": { "type": "object", "description": "The full generated JSON from Gemini." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "When it was generated." },
+        "lastSync": { "type": "string", "format": "date-time", "description": "Last time it was saved." }
+      },
+      "required": ["userId", "mathConcept", "gradeLevel", "content", "createdAt"]
+    },
+    "GlobalGeneration": {
+      "title": "GlobalGeneration",
+      "description": "Archived word problem generation from any teacher for admin review.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique ID for the record." },
+        "teacherUid": { "type": "string", "description": "UID of the generating teacher." },
+        "teacherEmail": { "type": "string", "description": "Email of the generating teacher." },
+        "teacherName": { "type": "string", "description": "Display name of the generating teacher." },
+        "mathConcept": { "type": "string", "description": "The math topic or concept." },
+        "gradeLevel": { "type": "string", "description": "The grade level." },
+        "genre": { "type": "string", "description": "The genre or context (e.g. Real Life, Sports)." },
+        "numberOfQuestions": { "type": "number", "description": "Number of questions generated." },
+        "content": { "type": "object", "description": "The complete generated worksheet problems, hints, and keys." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp." }
+      },
+      "required": ["teacherUid", "teacherEmail", "mathConcept", "gradeLevel", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document containing monthly quota and plan status."
+    },
+    "/users/{userId}/worksheets/{worksheetId}": {
+      "schema": "Worksheet",
+      "description": "User-specific collection of generated worksheets."
+    },
+    "/global_generations/{generationId}": {
+      "schema": "GlobalGeneration",
+      "description": "Complete global archive of all teacher generations, viewable only by chitkaran@gmail.com."
+    }
+  }
+}

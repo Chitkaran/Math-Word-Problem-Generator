@@ -1,0 +1,8 @@
+{
+  "name": "Math Word Problem Generator",
+  "description": "An application for classroom teachers to generate curriculum-aligned, differentiated math word problems with support features and teacher-facing content.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
