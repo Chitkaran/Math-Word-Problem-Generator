@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { TopTicker } from './components/TopTicker';
-import { AppHeader } from './components/Header';
+import { Sidebar, MobileBottomNav } from './components/Sidebar';
+import { HelpModal } from './components/HelpModal';
 import { SettingsForm } from './components/SettingsForm';
 import { OutputDisplay } from './components/OutputDisplay';
 import { GoogleSignInModal } from './components/GoogleSignInModal';
@@ -38,6 +39,10 @@ export default function App() {
   const [progress, setProgress] = useState(0);
   const [activeDifferentiationLevel, setActiveDifferentiationLevel] = useState<'scaffolded' | 'onLevel' | 'challenge' | 'mix' | null>(null);
   
+  // Navigation & Modals State
+  const [sidebarTab, setSidebarTab] = useState<'home' | 'saved' | 'history' | 'help'>('home');
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+
   // Firebase State
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
@@ -48,6 +53,15 @@ export default function App() {
   const [isAdminArchiveOpen, setIsAdminArchiveOpen] = useState(false);
   const [isUserAreaOpen, setIsUserAreaOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+
+  const handleSelectTab = (tab: 'home' | 'saved' | 'history' | 'help') => {
+    setSidebarTab(tab);
+    if (tab === 'saved' || tab === 'history') {
+      setIsUserAreaOpen(true);
+    } else if (tab === 'help') {
+      setIsHelpModalOpen(true);
+    }
+  };
 
   // Check if current user is admin chitkaran@gmail.com
   const isAdmin = Boolean(
@@ -430,131 +444,113 @@ export default function App() {
   const isBlurred = !isAuthChecking && !user;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-[#EEF2FF] via-[#F5F3FF] to-[#E0F2FE] relative overflow-x-hidden font-sans text-slate-800 selection:bg-purple-600 selection:text-white">
+    <div className="min-h-screen bg-gradient-to-br from-[#e8f6f8] via-[#edf7f9] to-[#dff0f3] relative overflow-x-hidden font-sans text-slate-800 selection:bg-purple-600 selection:text-white">
       
-      {/* Decorative Pastel Background Blobs matching logo palette */}
+      {/* Decorative Pastel Background Blobs */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden no-print select-none">
-        {/* Top Left Lavender/Violet Glow */}
-        <div className="absolute -top-[12%] -left-[10%] w-[45%] h-[45%] bg-purple-200/50 blur-[130px] rounded-full" />
-        {/* Center Right Warm Gold Pencil Glow */}
-        <div className="absolute top-[25%] -right-[8%] w-[45%] h-[45%] bg-amber-200/40 blur-[140px] rounded-full" />
-        {/* Bottom Left Mint Speech Bubble Glow */}
-        <div className="absolute -bottom-[10%] -left-[5%] w-[50%] h-[45%] bg-teal-200/40 blur-[130px] rounded-full" />
-        {/* Center Soft Periwinkle Glow */}
-        <div className="absolute top-[40%] left-[20%] w-[40%] h-[40%] bg-indigo-200/30 blur-[150px] rounded-full" />
+        <div className="absolute -top-[12%] -left-[10%] w-[45%] h-[45%] bg-sky-200/40 blur-[130px] rounded-full" />
+        <div className="absolute top-[25%] -right-[8%] w-[45%] h-[45%] bg-purple-200/30 blur-[140px] rounded-full" />
+        <div className="absolute -bottom-[10%] -left-[5%] w-[50%] h-[45%] bg-teal-100/50 blur-[130px] rounded-full" />
       </div>
 
-      {/* 1. TOP TICKER (Shown at the very top with live fluctuating counters) */}
+      {/* 1. TOP TICKER (Shown at the very top with live fluctuating counters & teacher status) */}
       <div className="no-print">
-        <TopTicker />
+        <TopTicker 
+          user={user}
+          onOpenSignIn={() => setShowSignInModal(true)}
+          userProfile={userProfile}
+          onOpenUserArea={() => setIsUserAreaOpen(true)}
+          isAdmin={isAdmin}
+          onOpenAdminArchive={() => setIsAdminArchiveOpen(true)}
+        />
       </div>
 
       {/* Main Page Content Wrapper (Blurred if user is not logged in) */}
       <div className={`relative z-10 transition-all duration-300 ${isBlurred ? 'filter blur-md pointer-events-none select-none' : ''}`}>
         
-        {/* 2. MAIN NAV BAR (Navy Blue Capsule) */}
-        <div className="no-print">
-          <AppHeader 
-            user={user} 
-            lastSync={lastSync} 
-            history={history} 
-            onLoadWorksheet={handleLoadWorksheet} 
-            onDeleteWorksheet={handleDeleteWorksheet}
-            onOpenSignIn={() => setShowSignInModal(true)}
-            isAdmin={isAdmin}
-            onOpenAdminArchive={() => setIsAdminArchiveOpen(true)}
-            userProfile={userProfile}
-            onOpenUserArea={() => setIsUserAreaOpen(true)}
-          />
-        </div>
-        
-        {/* 3. MAIN CONTAINER */}
-        <main className="container mx-auto max-w-7xl pb-24 relative">
+        {/* 2. MAIN TWO-COLUMN CONTAINER: SIDEBAR + MAIN CARD */}
+        <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-1 pb-28 lg:pb-20 relative">
           
-          {/* Main Generator Card */}
-          <div className="no-print">
-            <SettingsForm 
-              formState={formState} 
-              setFormState={setFormState} 
-              onGenerate={handleGenerate}
-              isLoading={isLoading}
-              userProfile={userProfile}
-              onOpenUserArea={() => setIsUserAreaOpen(true)}
-            />
-          </div>
-
-          {/* Bottom Left Playful Doodle: "Small Steps Big Learning" */}
-          <div className="no-print hidden md:flex absolute -bottom-16 left-6 flex-col select-none pointer-events-none z-0">
-            <div className="relative pl-7">
-              {/* 3 Yellow radiating rays on left */}
-              <div className="absolute left-0 top-3 flex flex-col gap-1.5 items-center">
-                <span className="w-4 h-1 bg-amber-400 rounded-full -rotate-25 block" />
-                <span className="w-5 h-1 bg-amber-400 rounded-full block" />
-                <span className="w-4 h-1 bg-amber-400 rounded-full rotate-25 block" />
-              </div>
-
-              {/* Hand-drawn style playful text */}
-              <div className="font-extrabold text-[#1E3A8A] text-lg leading-tight tracking-tight drop-shadow-sm rotate-[-4deg]">
-                <p>Small</p>
-                <p className="pl-1">Steps</p>
-                <p className="pl-2 text-xl text-indigo-900">Big</p>
-                <p className="text-xl text-indigo-900">Learning</p>
-              </div>
-
-              {/* Smile arc under Learning */}
-              <div className="w-20 h-3 border-b-2 border-amber-400 rounded-full mt-1 ml-1" />
+          <div className="flex flex-col lg:flex-row items-stretch gap-6">
+            {/* Left Sidebar (Desktop Only) */}
+            <div className="no-print hidden lg:flex w-64 xl:w-72 shrink-0">
+              <Sidebar 
+                activeTab={sidebarTab}
+                onSelectTab={handleSelectTab}
+                savedCount={history.length}
+              />
             </div>
-          </div>
 
-          {/* Bottom Right Playful Doodle: Heart & Stars */}
-          <div className="no-print hidden md:flex absolute -bottom-12 right-10 items-center gap-3 select-none pointer-events-none z-0">
-            {/* Outlined cute sky blue heart */}
-            <svg className="w-9 h-9 text-sky-400 stroke-current fill-none transform -rotate-12" viewBox="0 0 24 24" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
-            </svg>
-            {/* Sparkle cross/stars */}
-            <div className="flex flex-col gap-1 text-sky-400">
-              <span className="text-base font-black leading-none">+</span>
-              <span className="text-xs font-black leading-none ml-2">✦</span>
-            </div>
-          </div>
-
-          {/* Error Message */}
-          {error && (
-            <div className="px-4 mt-6 max-w-4xl mx-auto">
-              <div className="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-2xl shadow-sm flex items-center gap-3">
-                <span className="text-rose-500 font-bold text-lg">⚠️</span>
-                <p className="text-sm font-medium text-rose-800">{error}</p>
-              </div>
-            </div>
-          )}
-
-          {/* Generated Worksheet Display */}
-          {generatedContent && (
-            <div className="px-4 mt-8">
-              <div className="bg-white rounded-[2.5rem] shadow-xl border border-slate-100 p-6 md:p-12">
-                <OutputDisplay 
-                  content={generatedContent} 
-                  activeView={activeView}
-                  setActiveView={setActiveView}
-                  printInfo={{
-                    mathConcept: formState.mathConcept,
-                    gradeLevel: formState.gradeLevel,
-                    numberOfQuestions: formState.numberOfQuestions
-                  }}
-                  activeDifferentiationLevel={activeDifferentiationLevel}
-                  setActiveDifferentiationLevel={setActiveDifferentiationLevel as (level: 'scaffolded' | 'onLevel' | 'challenge' | 'mix') => void}
-                  onPrint={handlePrint}
+            {/* Right Main Content Area */}
+            <div className="flex-1 min-w-0 flex flex-col gap-6">
+              {/* Main Generator Card */}
+              <div className="no-print">
+                <SettingsForm 
+                  formState={formState} 
+                  setFormState={setFormState} 
+                  onGenerate={handleGenerate}
+                  isLoading={isLoading}
+                  userProfile={userProfile}
+                  onOpenUserArea={() => setIsUserAreaOpen(true)}
                 />
               </div>
+
+              {/* Error Message */}
+              {error && (
+                <div className="no-print">
+                  <div className="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-2xl shadow-sm flex items-center gap-3">
+                    <span className="text-rose-500 font-bold text-lg">⚠️</span>
+                    <p className="text-sm font-medium text-rose-800">{error}</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Generated Worksheet Display */}
+              {generatedContent && (
+                <div>
+                  <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 md:p-10">
+                    <OutputDisplay 
+                      content={generatedContent} 
+                      activeView={activeView}
+                      setActiveView={setActiveView}
+                      printInfo={{
+                        mathConcept: formState.mathConcept,
+                        gradeLevel: formState.gradeLevel,
+                        numberOfQuestions: formState.numberOfQuestions
+                      }}
+                      activeDifferentiationLevel={activeDifferentiationLevel}
+                      setActiveDifferentiationLevel={setActiveDifferentiationLevel as (level: 'scaffolded' | 'onLevel' | 'challenge' | 'mix') => void}
+                      onPrint={handlePrint}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
-          )}
+          </div>
 
         </main>
+
+        {/* Mobile Bottom Navigation Bar */}
+        <div className="no-print lg:hidden">
+          <MobileBottomNav 
+            activeTab={sidebarTab}
+            onSelectTab={handleSelectTab}
+            savedCount={history.length}
+          />
+        </div>
       </div>
 
       {/* Overlay Modals (All hidden during printing) */}
       <div className="no-print">
+        {/* Help Modal */}
+        <HelpModal 
+          isOpen={isHelpModalOpen} 
+          onClose={() => {
+            setIsHelpModalOpen(false);
+            setSidebarTab('home');
+          }} 
+        />
+
         {/* 4. GOOGLE SIGN-IN MODAL (Centered over blurred page if user is not logged in) */}
         {(isBlurred || showSignInModal) && (
           <GoogleSignInModal onSuccess={() => setShowSignInModal(false)} />
