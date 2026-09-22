@@ -1,7 +1,15 @@
 import type { FormState } from '../types';
 
-export async function* generateWordProblemsStream(settings: FormState): AsyncGenerator<{ text: string }> {
-  const response = await fetch('/api/generate', {
+export async function* generateWordProblemsStream(settings: FormState): AsyncGenerator<{ text: string }, void, unknown> {
+  const selectedLevels = Object.entries(settings.differentiation)
+    .filter(([, value]) => value)
+    .map(([key]) => key);
+
+  if (selectedLevels.length === 0) {
+    throw new Error("Please select at least one differentiation level.");
+  }
+
+  const response = await fetch('/api/generate-problems', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -10,53 +18,34 @@ export async function* generateWordProblemsStream(settings: FormState): AsyncGen
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    let msg = errorData.error;
-    if (!msg) {
-      if (response.status === 503) {
-        msg = 'The AI model is experiencing a temporary spike in high demand. Please try again in a few moments.';
-      } else {
-        msg = `Failed to generate word problems (Status: ${response.status})`;
+    let errorMsg = "Failed to generate word problems. Please try again.";
+    try {
+      const errData = await response.json();
+      if (errData?.error) {
+        errorMsg = errData.error;
       }
+    } catch {
+      // ignore
     }
-    throw new Error(msg);
+    throw new Error(errorMsg);
   }
 
   const reader = response.body?.getReader();
   if (!reader) {
-    throw new Error('Response stream is not readable.');
+    throw new Error("Unable to read streaming response from server.");
   }
 
-  const decoder = new TextDecoder();
-  let buffer = '';
-
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-
-    buffer += decoder.decode(value, { stream: true });
-    const lines = buffer.split('\n');
-    buffer = lines.pop() || '';
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (!trimmed || !trimmed.startsWith('data: ')) continue;
-      const dataStr = trimmed.slice(6);
-      if (dataStr === '[DONE]') return;
-
-      try {
-        const parsed = JSON.parse(dataStr);
-        if (parsed.error) {
-          throw new Error(parsed.error);
-        }
-        if (parsed.text) {
-          yield { text: parsed.text };
-        }
-      } catch (err: any) {
-        if (err.message && !err.message.includes('JSON')) {
-          throw err;
-        }
+  const decoder = new TextDecoder("utf-8");
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const text = decoder.decode(value, { stream: true });
+      if (text) {
+        yield { text };
       }
     }
+  } finally {
+    reader.releaseLock();
   }
 }
