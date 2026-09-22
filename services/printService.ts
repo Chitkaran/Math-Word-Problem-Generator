@@ -80,28 +80,20 @@ export function generateWorksheetHtml(
     problemsHtml = problemsToPrint.map((item, index) => {
       const p = item.problem;
       if (!p) return '';
-      const hintsHtml = p.stepByStepHints && p.stepByStepHints.length > 0
-        ? `
-          <div class="hints-box">
-            <div class="hints-title">💡 Step-by-Step Hints:</div>
-            <ol>
-              ${p.stepByStepHints.map(h => `<li>${escapeHtml(h)}</li>`).join('')}
-            </ol>
-          </div>
-        `
-        : '';
 
       return `
-        <div class="problem-card">
-          <div class="problem-header">
-            <span class="problem-num">Problem ${index + 1}</span>
-            ${level === 'mix' ? `<span class="level-badge">${escapeHtml(item.levelLabel)}</span>` : ''}
+        <div class="problem-row">
+          <div class="problem-left-col">
+            <div class="problem-header">
+              <span class="problem-num">Problem ${index + 1}</span>
+              ${level === 'mix' ? `<span class="level-badge">${escapeHtml(item.levelLabel)}</span>` : ''}
+            </div>
+            <div class="problem-text">${escapeHtml(p.problemText)}</div>
           </div>
-          <div class="problem-text">${escapeHtml(p.problemText)}</div>
-          ${hintsHtml}
-          <div class="workspace-section">
-            <div class="workspace-prompt">${escapeHtml(p.workspacePrompt || 'Show your mathematical thinking:')}</div>
-            <div class="workspace-box"></div>
+          <div class="problem-right-col">
+            <div class="workspace-box">
+              <div class="workspace-prompt">${escapeHtml(p.workspacePrompt || 'Show your mathematical thinking:')}</div>
+            </div>
           </div>
         </div>
       `;
@@ -268,6 +260,53 @@ export function generateWorksheetHtml(
       color: #334155;
     }
 
+    .problem-row {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      border-bottom: 1.5px solid #cbd5e1;
+      padding-bottom: 24px;
+      margin-bottom: 24px;
+      align-items: stretch;
+    }
+    .problem-row:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .problem-left-col {
+      width: 30%;
+      flex: 0 0 30%;
+      display: flex;
+      flex-direction: column;
+    }
+    .problem-right-col {
+      width: 70%;
+      flex: 0 0 70%;
+      display: flex;
+      flex-direction: column;
+    }
+    .workspace-box {
+      width: 100%;
+      height: 100%;
+      min-height: 200px;
+      border: 2px solid #94a3b8;
+      border-radius: 16px;
+      background: #fafafa;
+      padding: 12px 14px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    .workspace-prompt {
+      font-size: 9pt;
+      color: #64748b;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
     .problem-card {
       page-break-inside: avoid;
       break-inside: avoid;
@@ -301,48 +340,11 @@ export function generateWorksheetHtml(
       letter-spacing: 0.5px;
     }
     .problem-text {
-      font-size: 11.5pt;
-      line-height: 1.65;
+      font-size: 11pt;
+      line-height: 1.6;
       color: #1e293b;
-      margin-bottom: 12px;
+      margin-bottom: 8px;
       white-space: pre-wrap;
-    }
-    .hints-box {
-      background: #fefce8;
-      border: 1px solid #fef08a;
-      border-radius: 8px;
-      padding: 10px 14px;
-      margin-bottom: 12px;
-      font-size: 10pt;
-    }
-    .hints-title {
-      font-weight: 700;
-      color: #854d0e;
-      margin-bottom: 4px;
-    }
-    .hints-box ol {
-      margin: 0;
-      padding-left: 20px;
-      color: #334155;
-    }
-    .hints-box li {
-      margin-bottom: 3px;
-    }
-    .workspace-section {
-      margin-top: 12px;
-    }
-    .workspace-prompt {
-      font-size: 9.5pt;
-      color: #64748b;
-      font-style: italic;
-      margin-bottom: 6px;
-    }
-    .workspace-box {
-      width: 100%;
-      min-height: 140px;
-      border: 1.5px dashed #cbd5e1;
-      border-radius: 8px;
-      background: #fafafa;
     }
 
     .teacher-card {

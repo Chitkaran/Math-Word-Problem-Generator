@@ -6,7 +6,6 @@ import {
   BookOpen, 
   GraduationCap, 
   Sparkles, 
-  Lightbulb, 
   CheckCircle2, 
   AlertTriangle,
   FileSpreadsheet,
@@ -369,52 +368,44 @@ export const GenerationSuccessModal: React.FC<GenerationSuccessModalProps> = ({
                 {displayedProblems.map(({ problem, levelLabel }, index) => (
                   <div 
                     key={`modal-prob-${index}`}
-                    className="bg-white rounded-2xl border border-slate-200/90 p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow"
+                    className="bg-white rounded-2xl border border-slate-200/90 p-5 md:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col md:flex-row items-stretch gap-6"
                   >
-                    {/* Problem Header */}
-                    <div className="flex items-center justify-between gap-3 mb-3">
-                      <div className="flex items-center gap-2">
-                        <span className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 font-black text-xs flex items-center justify-center border border-purple-200">
-                          {index + 1}
-                        </span>
-                        <h4 className="font-bold text-slate-900 text-sm md:text-base">
-                          Problem {index + 1}
-                        </h4>
+                    {/* Left Column: 30% Question text and number */}
+                    <div className="w-full md:w-[30%] shrink-0 flex flex-col justify-start">
+                      {/* Problem Header */}
+                      <div className="flex items-center justify-between gap-2 mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 font-black text-xs flex items-center justify-center border border-purple-200">
+                            {index + 1}
+                          </span>
+                          <h4 className="font-bold text-slate-900 text-sm md:text-base">
+                            Problem {index + 1}
+                          </h4>
+                        </div>
+                        {activeLevel === 'mix' && (
+                          <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 bg-purple-50 text-purple-700 rounded-full border border-purple-200 whitespace-nowrap">
+                            {levelLabel}
+                          </span>
+                        )}
                       </div>
-                      {activeLevel === 'mix' && (
-                        <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200">
-                          {levelLabel}
-                        </span>
-                      )}
+
+                      {/* Problem Text */}
+                      <p className="text-slate-800 text-sm md:text-base leading-relaxed whitespace-pre-wrap font-medium">
+                        {problem.problemText}
+                      </p>
                     </div>
 
-                    {/* Problem Text */}
-                    <p className="text-slate-800 text-base md:text-lg leading-relaxed whitespace-pre-wrap font-medium">
-                      {problem.problemText}
-                    </p>
-
-                    {/* Hints (if present) - styled in warm gold/amber matching the logo's pencil & lightbulb */}
-                    {problem.stepByStepHints && problem.stepByStepHints.length > 0 && (
-                      <div className="mt-4 p-4 rounded-xl bg-amber-50/80 border border-amber-200/90">
-                        <div className="flex items-center gap-2 text-xs font-bold text-amber-900 uppercase tracking-wide mb-2">
-                          <Lightbulb className="w-4 h-4 text-amber-600" />
-                          <span>Step-by-Step Hints</span>
+                    {/* Right Column: 70% Working space box with curved edges */}
+                    <div className="w-full md:w-[70%] flex flex-col">
+                      <div className="w-full h-full min-h-[180px] md:min-h-[220px] rounded-2xl border-2 border-slate-200 bg-slate-50/50 p-4 flex flex-col justify-between hover:border-purple-300 transition-colors">
+                        <span className="text-xs text-slate-500 italic">
+                          {problem.workspacePrompt || 'Show your mathematical thinking & working:'}
+                        </span>
+                        <div className="flex justify-end">
+                          <span className="text-[11px] text-slate-400 font-medium select-none uppercase tracking-wider">
+                            Work Space
+                          </span>
                         </div>
-                        <ol className="list-decimal list-inside text-xs md:text-sm text-slate-700 space-y-1.5 pl-1">
-                          {problem.stepByStepHints.map((hint, hIdx) => (
-                            <li key={hIdx} className="leading-normal">{hint}</li>
-                          ))}
-                        </ol>
-                      </div>
-                    )}
-
-                    {/* Workspace Prompt and Box */}
-                    <div className="mt-4">
-                      <p className="text-xs text-slate-500 italic mb-2">
-                        {problem.workspacePrompt || 'Show your mathematical thinking in the workspace below:'}
-                      </p>
-                      <div className="w-full h-32 border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/70 flex items-center justify-center">
-                        <span className="text-xs text-slate-400 select-none">Student Work Space</span>
                       </div>
                     </div>
                   </div>

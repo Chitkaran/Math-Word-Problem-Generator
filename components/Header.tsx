@@ -76,8 +76,8 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   return (
     <header className="relative z-40 px-4 pt-4 pb-3">
       <div className="container mx-auto max-w-7xl">
-        {/* Navy Capsule Header matching screenshot */}
-        <div className="bg-[#182449] rounded-2xl md:rounded-[1.75rem] px-6 py-4 flex items-center justify-between shadow-lg shadow-indigo-950/20">
+        {/* Sky Blue Capsule Header matching CSS selector 1 */}
+        <div className="bg-[#a9e6ff] border-4 border-white rounded-2xl md:rounded-[1.75rem] px-6 py-4 flex items-center justify-between shadow-lg shadow-sky-900/10">
           
           {/* Left Brand Area */}
           <div className="flex items-center gap-3 md:gap-4">
@@ -85,30 +85,30 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
             <img 
               src="/logo.png" 
               alt="Math Word Problem Generator Logo" 
-              className="w-10 h-10 md:w-11 md:h-11 rounded-xl object-contain border border-white/20 bg-white/10 p-0.5 flex-shrink-0 shadow-md shadow-purple-950/40" 
+              className="w-10 h-10 md:w-11 md:h-11 rounded-xl object-contain border border-white/40 bg-white/40 p-0.5 flex-shrink-0 shadow-md shadow-sky-900/10" 
               referrerPolicy="no-referrer"
             />
 
             {/* App Name matching logo branding */}
             <div className="flex items-center gap-2">
-              <h1 className="text-lg sm:text-xl md:text-2xl font-black text-white tracking-tight flex items-center">
+              <h1 className="text-lg sm:text-xl md:text-2xl font-black text-[#0b67a9] tracking-tight flex items-center">
                 Math Word Problem
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] md:text-xs font-black uppercase tracking-wider bg-gradient-to-r from-purple-500 to-indigo-600 text-white shadow-sm border border-purple-300/30 hidden sm:inline-block">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] md:text-xs font-black uppercase tracking-wider bg-[#000000] text-white shadow-sm hidden sm:inline-block">
                 Generator
               </span>
             </div>
 
             {/* Divider */}
-            <span className="text-slate-500 font-light hidden lg:inline text-lg">|</span>
+            <span className="text-[#0b67a9]/40 font-light hidden lg:inline text-lg">|</span>
 
             {/* Tagline */}
-            <p className="text-slate-300 text-xs md:text-sm font-medium hidden lg:inline">
+            <p className="text-[#0b67a9] text-xs md:text-sm font-medium hidden lg:inline">
               By a Teacher, For the Teachers
             </p>
 
             {lastSync && user && (
-              <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 bg-teal-950/60 text-teal-300 rounded-full border border-teal-500/30 text-[10px] font-bold uppercase tracking-wider ml-2">
+              <div className="hidden xl:flex items-center gap-1.5 px-2.5 py-0.5 bg-[#0b67a9]/15 text-[#0b67a9] rounded-full border border-[#0b67a9]/20 text-[10px] font-bold uppercase tracking-wider ml-2">
                 <Clock className="h-3 w-3" />
                 <span>Synced {new Date(lastSync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
               </div>
@@ -135,26 +135,22 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 {onOpenUserArea && (
                   <button
                     onClick={onOpenUserArea}
-                    className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border transition-all hover:scale-105 active:scale-95 cursor-pointer ${
-                      userProfile?.plan === 'unlimited'
-                        ? 'bg-gradient-to-r from-indigo-900 via-indigo-800 to-slate-900 text-amber-300 border-amber-400/50 shadow-sm shadow-amber-500/20'
-                        : 'bg-slate-800 hover:bg-slate-700/90 text-slate-200 border-slate-700 hover:border-indigo-400'
-                    }`}
+                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs md:text-sm font-bold border border-[#0b67a9] bg-[#0b67a9] text-white shadow-sm transition-all hover:scale-105 active:scale-95 cursor-pointer"
                     title="Open User Area: My Past Generations, Quota & Plan"
                   >
                     {userProfile?.plan === 'unlimited' ? (
                       <>
-                        <Crown className="h-4 w-4 text-amber-400 fill-amber-400 flex-shrink-0" />
-                        <span className="hidden sm:inline">Unlimited</span>
-                        <span className="px-1.5 py-0.2 rounded-full bg-amber-400/20 text-amber-300 text-[10px] font-black uppercase">
+                        <Crown className="h-4 w-4 text-white fill-white flex-shrink-0" />
+                        <span className="hidden sm:inline text-white">Unlimited</span>
+                        <span className="px-1.5 py-0.2 rounded-full bg-white/20 text-white text-[10px] font-black uppercase">
                           Pro
                         </span>
                       </>
                     ) : (
                       <>
-                        <Zap className="h-4 w-4 text-indigo-400 flex-shrink-0" />
-                        <span className="hidden sm:inline text-slate-300">Free Quota:</span>
-                        <span className="font-extrabold text-indigo-300">
+                        <Zap className="h-4 w-4 text-white flex-shrink-0" />
+                        <span className="hidden sm:inline text-white">Free Quota:</span>
+                        <span className="font-extrabold text-white">
                           {Math.max(0, (userProfile?.quotaLimit ?? 30) - (userProfile?.generationsUsedThisMonth ?? 0))}/30
                         </span>
                       </>
@@ -166,15 +162,15 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 <div className="relative">
                   <button 
                     onClick={() => setShowHistory(!showHistory)}
-                    className="flex items-center gap-2 px-3 py-2 bg-slate-800/80 hover:bg-slate-800 text-slate-200 border border-slate-700/80 rounded-xl font-bold text-xs md:text-sm transition-all"
+                    className="flex items-center gap-2 px-3 py-2 bg-[#0b67a9] hover:bg-[#09548a] text-white border border-[#0b67a9] rounded-xl font-bold text-xs md:text-sm transition-all cursor-pointer shadow-sm"
                     title="View saved worksheets"
                   >
-                    <History className="h-4 w-4 text-indigo-400" />
-                    <span className="hidden md:inline">Saved Worksheets</span>
-                    <span className="px-1.5 py-0.2 bg-indigo-500/30 text-indigo-300 rounded-full text-[11px] font-black">
+                    <History className="h-4 w-4 text-white" />
+                    <span className="hidden md:inline text-white">Saved Worksheets</span>
+                    <span className="px-1.5 py-0.2 bg-white/20 text-white rounded-full text-[11px] font-black">
                       {history.length}
                     </span>
-                    <ChevronDown className={`h-3.5 w-3.5 text-slate-400 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
+                    <ChevronDown className={`h-3.5 w-3.5 text-white/80 transition-transform ${showHistory ? 'rotate-180' : ''}`} />
                   </button>
 
                   <AnimatePresence>
@@ -285,7 +281,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                 </div>
 
                 {/* Teacher Profile & Sign Out */}
-                <div className="flex items-center gap-2.5 pl-3 border-l border-slate-700/80">
+                <div className="flex items-center gap-2.5 pl-3 border-l border-[#0b67a9]/30">
                   <div 
                     onClick={onOpenUserArea} 
                     className="flex items-center gap-2 cursor-pointer group"
@@ -295,20 +291,20 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
                       <img 
                         src={user.photoURL} 
                         alt={user.displayName || ''} 
-                        className="w-9 h-9 rounded-full border border-indigo-400/50 shadow-sm object-cover group-hover:ring-2 group-hover:ring-indigo-400 transition-all" 
+                        className="w-9 h-9 rounded-full border border-[#0b67a9]/40 shadow-sm object-cover group-hover:ring-2 group-hover:ring-[#0b67a9] transition-all" 
                         referrerPolicy="no-referrer" 
                       />
                     ) : (
-                      <div className="w-9 h-9 rounded-full bg-indigo-600 flex items-center justify-center text-white text-sm font-bold group-hover:ring-2 group-hover:ring-indigo-400 transition-all">
+                      <div className="w-9 h-9 rounded-full bg-[#0b67a9] flex items-center justify-center text-white text-sm font-bold group-hover:ring-2 group-hover:ring-[#0b67a9] transition-all">
                         {user.displayName ? user.displayName.charAt(0).toUpperCase() : <User className="h-4 w-4" />}
                       </div>
                     )}
 
                     <div className="hidden lg:block text-left">
-                      <p className="text-xs font-bold text-white truncate max-w-[120px] group-hover:text-indigo-200 transition-colors">
+                      <p className="text-xs font-bold text-[#0b67a9] truncate max-w-[120px] transition-colors">
                         {user.displayName || 'Teacher'}
                       </p>
-                      <span className="text-[10px] text-slate-400 flex items-center gap-1 group-hover:text-indigo-300">
+                      <span className="text-[10px] text-[#0b67a9]/70 flex items-center gap-1">
                         My Account
                       </span>
                     </div>
@@ -316,7 +312,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
                   <button 
                     onClick={handleSignOut}
-                    className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors ml-1"
+                    className="p-1.5 text-[#0b67a9] hover:text-rose-600 hover:bg-white/50 rounded-lg transition-colors ml-1 cursor-pointer"
                     title="Sign Out"
                   >
                     <LogOut className="h-4 w-4" />

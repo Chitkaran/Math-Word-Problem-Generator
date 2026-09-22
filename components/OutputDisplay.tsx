@@ -78,35 +78,44 @@ export const OutputDisplay: React.FC<OutputDisplayProps> = ({
         <h3 className="text-2xl font-black text-purple-800 mb-6 pb-2 border-b border-purple-200 no-print">
           {title}
         </h3>
-        <div className="space-y-12">
+        <div className="space-y-8">
           {problems.map(({ problem, level: pLevel }, index) => (
-            <div key={`${level}-${index}`} className="break-inside-avoid border-b border-slate-100 pb-8 last:border-0">
-              <div className="flex justify-between items-center mb-4">
-                <p className="font-bold text-lg text-slate-800">Problem {index + 1}</p>
-                {level === 'mix' && (
-                   <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-purple-50 text-purple-700 rounded-full border border-purple-200">
-                     {pLevel}
-                   </span>
-                )}
-              </div>
-              <p className="text-lg leading-relaxed mb-6 text-slate-700 whitespace-pre-wrap">{problem.problemText}</p>
-              
-              {problem.stepByStepHints && problem.stepByStepHints.length > 0 && (
-                <div className="mb-6 p-5 border border-amber-200 bg-amber-50/50 rounded-xl">
-                  <h6 className="font-bold text-sm text-amber-900 mb-3 flex items-center gap-2">
-                    <span className="text-lg">💡</span> Step-by-Step Hints
-                  </h6>
-                  <ol className="list-decimal list-inside text-slate-700 space-y-2">
-                    {problem.stepByStepHints.map((hint, hintIndex) => (
-                      <li key={hintIndex} className="pl-2">{hint}</li>
-                    ))}
-                  </ol>
+            <div 
+              key={`${level}-${index}`} 
+              className="break-inside-avoid border-b border-slate-200/80 pb-8 last:border-0 flex flex-col md:flex-row items-stretch gap-6"
+            >
+              {/* Left Column: 30% Question text and details */}
+              <div className="w-full md:w-[30%] shrink-0 flex flex-col justify-start">
+                <div className="flex justify-between items-center mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className="w-7 h-7 rounded-lg bg-purple-50 text-purple-700 font-black text-xs flex items-center justify-center border border-purple-200">
+                      {index + 1}
+                    </span>
+                    <p className="font-bold text-base md:text-lg text-slate-900">Problem {index + 1}</p>
+                  </div>
+                  {level === 'mix' && (
+                     <span className="text-[10px] font-black uppercase tracking-widest px-2 py-0.5 bg-purple-50 text-purple-700 rounded-full border border-purple-200 whitespace-nowrap">
+                       {pLevel}
+                     </span>
+                  )}
                 </div>
-              )}
+                <p className="text-base md:text-lg leading-relaxed text-slate-800 whitespace-pre-wrap font-medium">
+                  {problem.problemText}
+                </p>
+              </div>
 
-              <div className="mt-6">
-                <p className="font-medium text-slate-500 italic mb-4">{problem.workspacePrompt}</p>
-                <div className="min-h-[12rem] border-2 border-dashed border-slate-200 rounded-xl bg-slate-50/50"></div>
+              {/* Right Column: 70% Working space box with curved edges */}
+              <div className="w-full md:w-[70%] flex flex-col">
+                <div className="w-full h-full min-h-[180px] md:min-h-[220px] rounded-2xl border-2 border-slate-200 bg-slate-50/50 p-4 flex flex-col justify-between hover:border-purple-300 transition-colors">
+                  <p className="text-xs text-slate-500 italic">
+                    {problem.workspacePrompt || 'Show your mathematical thinking & working:'}
+                  </p>
+                  <div className="flex justify-end">
+                    <span className="text-[11px] text-slate-400 font-medium select-none uppercase tracking-wider">
+                      Work Space
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
