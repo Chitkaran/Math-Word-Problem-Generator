@@ -482,19 +482,9 @@ export default function App() {
           {/* Error Message */}
           {error && (
             <div className="px-4 mt-6 max-w-4xl mx-auto">
-              <div className="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-2xl shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                <div className="flex items-center gap-3">
-                  <span className="text-rose-500 font-bold text-lg">⚠️</span>
-                  <p className="text-sm font-medium text-rose-800">{error}</p>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleGenerate}
-                  disabled={isLoading}
-                  className="self-start sm:self-auto shrink-0 px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white font-semibold text-xs rounded-xl shadow-sm transition active:scale-95 disabled:opacity-50"
-                >
-                  Try Again
-                </button>
+              <div className="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-2xl shadow-sm flex items-center gap-3">
+                <span className="text-rose-500 font-bold text-lg">⚠️</span>
+                <p className="text-sm font-medium text-rose-800">{error}</p>
               </div>
             </div>
           )}
