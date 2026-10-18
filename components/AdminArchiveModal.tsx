@@ -1147,7 +1147,7 @@ export const AdminArchiveModal: React.FC<AdminArchiveModalProps> = ({
                       <span className="text-xs font-bold text-slate-500">Build Command</span>
                       <button
                         type="button"
-                        onClick={() => copyToClipboard('npm install && npm run build', 'build_cmd')}
+                        onClick={() => copyToClipboard('npm install --include=dev && npm run build', 'build_cmd')}
                         className="flex items-center gap-1 text-[11px] font-bold text-purple-600 hover:text-purple-700 cursor-pointer"
                       >
                         {copiedField === 'build_cmd' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -1155,10 +1155,10 @@ export const AdminArchiveModal: React.FC<AdminArchiveModalProps> = ({
                       </button>
                     </div>
                     <code className="block p-2 rounded-lg bg-slate-900 text-amber-300 font-mono text-xs select-all">
-                      npm install &amp;&amp; npm run build
+                      npm install --include=dev &amp;&amp; npm run build
                     </code>
                     <p className="text-[11px] text-slate-500">
-                      Builds Vite assets and bundles <code className="text-slate-700">server.ts</code> to <code className="text-slate-700">dist/server.cjs</code>.
+                      Builds Vite assets and bundles <code className="text-slate-700">server.ts</code> to <code className="text-slate-700">dist/server.cjs</code> (all build tools moved to dependencies to prevent missing Vite).
                     </p>
                   </div>
 

@@ -12,7 +12,7 @@ When creating a **New Web Service** on Render:
 |---|---|---|
 | **Service Type** | **Web Service** | Do *not* choose Static Site because this app includes a server-side Gemini backend (`server.ts`). |
 | **Language / Runtime** | **Node** | Node.js 18, 20, or 22 |
-| **Build Command** | `npm install && npm run build` | Builds the Vite frontend and bundles `server.ts` into `dist/server.cjs` |
+| **Build Command** | `npm install --include=dev && npm run build` | Builds the Vite frontend and bundles `server.ts` into `dist/server.cjs` (the `--include=dev` flag ensures build tools are installed even if `NODE_ENV=production`) |
 | **Start Command** | `npm run start` | Runs `node dist/server.cjs` on the dynamic `$PORT` provided by Render |
 | **Instance Type** | **Free** or **Starter** | Free tier works great; Starter removes sleep on inactivity |
 | **Health Check Path** | `/api/health` | Verified endpoint that returns `{ status: "ok" }` |
@@ -60,7 +60,7 @@ This ensures teachers can log in with Google Sign-in on your Render deployment w
    - **Region**: Choose the closest region (e.g. Oregon, Ohio, Frankfurt)
    - **Branch**: `main` (or `master`)
    - **Runtime**: `Node`
-   - **Build Command**: `npm install && npm run build`
+   - **Build Command**: `npm install --include=dev && npm run build`
    - **Start Command**: `npm run start`
 6. Scroll down to **Environment Variables**:
    - Add `NODE_ENV` = `production`
