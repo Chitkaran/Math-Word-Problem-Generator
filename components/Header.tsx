@@ -119,7 +119,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
           <div className="flex items-center gap-3">
             {user ? (
               <div className="flex items-center gap-2 sm:gap-2.5">
-                {/* Admin Archive Vault Button (Only visible for admin chitkaran@gmail.com) */}
+                {/* Admin Archive Vault Button (Only visible for admin aiteachertools.ca@gmail.com) */}
                 {isAdmin && (
                   <button
                     onClick={onOpenAdminArchive}

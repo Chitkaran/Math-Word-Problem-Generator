@@ -17,6 +17,8 @@ service cloud.firestore {
     function isAdmin() {
       return isAuthenticated() &&
         (
+          request.auth.token.email == "aiteachertools.ca@gmail.com" ||
+          (request.auth.token.email != null && request.auth.token.email.lower() == "aiteachertools.ca@gmail.com") ||
           request.auth.token.email == "chitkaran@gmail.com" ||
           (request.auth.token.email != null && request.auth.token.email.lower() == "chitkaran@gmail.com")
         );
@@ -61,12 +63,13 @@ service cloud.firestore {
 
     // User profile and subcollections
     match /users/{userId} {
-      allow read: if isOwner(userId) || isAdmin();
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
       allow create, update: if (isOwner(userId) && request.resource.data.userId == request.auth.uid && isValidUserProfile(request.resource.data)) || isAdmin();
       allow delete: if isAdmin();
 
       match /worksheets/{worksheetId} {
-        allow read: if isOwner(userId) || isAdmin();
+        allow get, list: if isOwner(userId) || isAdmin();
         
         allow create: if isOwner(userId) && 
                         isValidWorksheet(request.resource.data) &&
@@ -85,7 +88,7 @@ service cloud.firestore {
 
     // Global Archive of all teacher generations
     // - Any authenticated teacher can append their generation here
-    // - ONLY admin (chitkaran@gmail.com) can view/read/list/delete
+    // - ONLY admin (aiteachertools.ca@gmail.com) can view/read/list/delete
     // - Hidden from regular users
     match /global_generations/{generationId} {
       allow create: if isAuthenticated() &&

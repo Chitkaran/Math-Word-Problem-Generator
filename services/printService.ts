@@ -1,5 +1,6 @@
-import type { GeneratedProblem, ProblemDetail, TeacherKeyDetail } from '../types';
+import type { GeneratedProblem, ProblemDetail, TeacherKeyDetail, RenderSettings } from '../types';
 import { LEVEL_NAMES } from '../constants';
+import { DEFAULT_RENDER_SETTINGS } from '../types';
 
 export type DifferentiationLevel = 'scaffolded' | 'onLevel' | 'challenge' | 'mix';
 
@@ -18,8 +19,10 @@ export function generateWorksheetHtml(
   content: GeneratedProblem,
   level: DifferentiationLevel,
   view: 'student' | 'teacher',
-  meta: PrintMeta
+  meta: PrintMeta,
+  renderSettings?: RenderSettings
 ): string {
+  const settings = renderSettings || DEFAULT_RENDER_SETTINGS;
   const baseLevels = (Object.keys(content.studentWorksheet) as ('scaffolded' | 'onLevel' | 'challenge')[])
     .filter(l => content.studentWorksheet[l] && content.studentWorksheet[l]!.length > 0);
 
@@ -74,6 +77,9 @@ export function generateWorksheetHtml(
   const levelName = level === 'mix' ? 'Mixed Differentiation' : LEVEL_NAMES[level];
   const viewTitle = view === 'student' ? 'Student Practice Worksheet' : 'Teacher Answer Key & Guide';
 
+  const sheetTitle = settings.customTitle?.trim() || meta.mathConcept;
+  const sheetSubtitle = settings.customSubtitle?.trim() || `Grade ${meta.gradeLevel} &ndash; ${levelName} &ndash; ${viewTitle}`;
+
   let problemsHtml = '';
 
   if (view === 'student') {
@@ -81,18 +87,31 @@ export function generateWorksheetHtml(
       const p = item.problem;
       if (!p) return '';
 
+      const isPageBreak = 
+        (settings.pageBreaks === '2-per-page' && (index + 1) % 2 === 0 && index + 1 < problemsToPrint.length) ||
+        (settings.pageBreaks === '4-per-page' && (index + 1) % 4 === 0 && index + 1 < problemsToPrint.length);
+
       return `
-        <div class="problem-row">
+        <div class="problem-row ${isPageBreak ? 'force-page-break' : ''}">
           <div class="problem-left-col">
             <div class="problem-header">
               <span class="problem-num">Problem ${index + 1}</span>
-              ${level === 'mix' ? `<span class="level-badge">${escapeHtml(item.levelLabel)}</span>` : ''}
+              ${settings.showDifficultyBadge && level === 'mix' ? `<span class="level-badge">${escapeHtml(item.levelLabel)}</span>` : ''}
             </div>
             <div class="problem-text">${escapeHtml(p.problemText)}</div>
+            ${settings.showHintsIfAvailable && p.stepByStepHints && p.stepByStepHints.length > 0 ? `
+              <div class="hints-box">
+                <div class="hints-title">💡 Helpful Hints:</div>
+                <ul>
+                  ${p.stepByStepHints.map(h => `<li>${escapeHtml(h)}</li>`).join('')}
+                </ul>
+              </div>
+            ` : ''}
           </div>
           <div class="problem-right-col">
-            <div class="workspace-box">
-              <div class="workspace-prompt">${escapeHtml(p.workspacePrompt || 'Show your mathematical thinking:')}</div>
+            <div class="workspace-box paper-${settings.paperStyle}">
+              ${settings.showWorkspacePrompt ? `<div class="workspace-prompt">${escapeHtml(p.workspacePrompt || 'Show your mathematical thinking & working:')}</div>` : ''}
+              <div class="workspace-label">Work Space</div>
             </div>
           </div>
         </div>
@@ -106,7 +125,7 @@ export function generateWorksheetHtml(
         <div class="problem-card teacher-card">
           <div class="problem-header">
             <span class="problem-num">Problem ${index + 1} — Solution & Guide</span>
-            ${level === 'mix' ? `<span class="level-badge">${escapeHtml(item.levelLabel)}</span>` : ''}
+            ${settings.showDifficultyBadge && level === 'mix' ? `<span class="level-badge">${escapeHtml(item.levelLabel)}</span>` : ''}
           </div>
           <div class="teacher-solution">
             <div class="section-title">Complete Solution:</div>
@@ -137,21 +156,97 @@ export function generateWorksheetHtml(
     }).join('');
   }
 
-  const studentHeaderFields = view === 'student'
+  const studentHeaderFields = (view === 'student' && settings.showHeader)
     ? `
       <div class="student-meta">
         <div class="meta-field"><strong>Name:</strong> ________________________________________</div>
         <div class="meta-field"><strong>Date:</strong> _____________________</div>
-        <div class="meta-field"><strong>Score:</strong> ________ / ${problemsToPrint.length}</div>
+        ${settings.showClassField ? `<div class="meta-field"><strong>Class:</strong> __________________</div>` : ''}
+        ${settings.showScoreField ? `<div class="meta-field"><strong>Score:</strong> ________ / ${problemsToPrint.length}</div>` : ''}
       </div>
     `
     : '';
+
+  const fontSizes = {
+    compact: { body: '10pt', problem: '10pt', title: '17pt' },
+    standard: { body: '11pt', problem: '11.5pt', title: '19pt' },
+    large: { body: '13pt', problem: '13.5pt', title: '21pt' }
+  }[settings.fontSize] || { body: '11pt', problem: '11.5pt', title: '19pt' };
+
+  const workspaceHeight = {
+    compact: '150px',
+    standard: '220px',
+    spacious: '320px'
+  }[settings.workspaceHeight] || '220px';
+
+  const themeColors = {
+    purple: {
+      headerBorder: '#7c3aed',
+      primaryText: '#581c87',
+      badgeBg: '#ede9fe',
+      badgeText: '#6d28d9',
+      badgeBorder: '#ddd6fe',
+      boxBorder: '#7c3aed'
+    },
+    slate: {
+      headerBorder: '#0f172a',
+      primaryText: '#0f172a',
+      badgeBg: '#f1f5f9',
+      badgeText: '#0f172a',
+      badgeBorder: '#cbd5e1',
+      boxBorder: '#475569'
+    },
+    navy: {
+      headerBorder: '#1e3a8a',
+      primaryText: '#172554',
+      badgeBg: '#eff6ff',
+      badgeText: '#1d4ed8',
+      badgeBorder: '#bfdbfe',
+      boxBorder: '#2563eb'
+    },
+    emerald: {
+      headerBorder: '#047857',
+      primaryText: '#064e3b',
+      badgeBg: '#ecfdf5',
+      badgeText: '#047857',
+      badgeBorder: '#a7f3d0',
+      boxBorder: '#059669'
+    }
+  }[settings.themeColor] || {
+    headerBorder: '#7c3aed',
+    primaryText: '#581c87',
+    badgeBg: '#ede9fe',
+    badgeText: '#6d28d9',
+    badgeBorder: '#ddd6fe',
+    boxBorder: '#7c3aed'
+  };
+
+  const layoutStyles = settings.layout === 'stacked'
+    ? `
+      .problem-row { flex-direction: column !important; }
+      .problem-left-col { width: 100% !important; flex: 0 0 100% !important; margin-bottom: 12px; }
+      .problem-right-col { width: 100% !important; flex: 0 0 100% !important; }
+    `
+    : settings.layout === 'split-40-60'
+    ? `
+      .problem-left-col { width: 40% !important; flex: 0 0 40% !important; }
+      .problem-right-col { width: 60% !important; flex: 0 0 60% !important; }
+    `
+    : settings.layout === 'split-50-50'
+    ? `
+      .problem-left-col { width: 50% !important; flex: 0 0 50% !important; }
+      .problem-right-col { width: 50% !important; flex: 0 0 50% !important; }
+    `
+    : `
+      .problem-left-col { width: 30% !important; flex: 0 0 30% !important; }
+      .problem-right-col { width: 70% !important; flex: 0 0 70% !important; }
+    `;
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>${escapeHtml(meta.mathConcept)} - ${escapeHtml(viewTitle)}</title>
+  <title>${escapeHtml(sheetTitle)} - ${escapeHtml(viewTitle)}</title>
   <style>
     @page {
       size: letter portrait;
@@ -167,7 +262,7 @@ export function generateWorksheetHtml(
       color: #0f172a;
       margin: 0;
       padding: 0;
-      font-size: 11pt;
+      font-size: ${fontSizes.body};
       line-height: 1.5;
       background: #ffffff;
     }
@@ -229,14 +324,14 @@ export function generateWorksheetHtml(
     }
 
     .header {
-      border-bottom: 2.5px solid #182449;
+      border-bottom: 2.5px solid ${themeColors.headerBorder};
       padding-bottom: 12px;
       margin-bottom: 18px;
     }
     .title {
-      font-size: 19pt;
+      font-size: ${fontSizes.title};
       font-weight: 900;
-      color: #182449;
+      color: ${themeColors.primaryText};
       margin: 0 0 5px 0;
       letter-spacing: -0.3px;
     }
@@ -248,13 +343,15 @@ export function generateWorksheetHtml(
     }
     .student-meta {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
+      gap: 10px;
       margin-top: 14px;
       padding: 10px 14px;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
       border-radius: 8px;
-      font-size: 10.5pt;
+      font-size: 10pt;
     }
     .meta-field {
       color: #334155;
@@ -264,7 +361,6 @@ export function generateWorksheetHtml(
       page-break-inside: avoid;
       break-inside: avoid;
       display: flex;
-      flex-direction: row;
       gap: 20px;
       border-bottom: 1.5px solid #cbd5e1;
       padding-bottom: 24px;
@@ -276,35 +372,80 @@ export function generateWorksheetHtml(
       margin-bottom: 0;
       padding-bottom: 0;
     }
-    .problem-left-col {
-      width: 30%;
-      flex: 0 0 30%;
-      display: flex;
-      flex-direction: column;
+    .force-page-break {
+      page-break-after: always !important;
+      break-after: page !important;
     }
-    .problem-right-col {
-      width: 70%;
-      flex: 0 0 70%;
-      display: flex;
-      flex-direction: column;
-    }
+
+    /* Layout overrides */
+    ${layoutStyles}
+
     .workspace-box {
       width: 100%;
       height: 100%;
-      min-height: 200px;
-      border: 2px solid #94a3b8;
+      min-height: ${workspaceHeight};
+      border: 2px solid ${themeColors.boxBorder};
       border-radius: 16px;
-      background: #fafafa;
       padding: 12px 14px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
+    }
+    .paper-grid {
+      background-image: linear-gradient(to right, #cbd5e1 1px, transparent 1px), linear-gradient(to bottom, #cbd5e1 1px, transparent 1px) !important;
+      background-size: 18px 18px !important;
+      background-color: #f8fafc !important;
+    }
+    .paper-lined {
+      background-image: linear-gradient(to bottom, transparent 24px, #cbd5e1 25px) !important;
+      background-size: 100% 25px !important;
+      background-color: #fafbfc !important;
+    }
+    .paper-dots {
+      background-image: radial-gradient(#94a3b8 1.5px, transparent 1.5px) !important;
+      background-size: 18px 18px !important;
+      background-color: #f8fafc !important;
+    }
+    .paper-blank {
+      background-color: #fafafa !important;
     }
     .workspace-prompt {
       font-size: 9pt;
       color: #64748b;
       font-style: italic;
       margin-bottom: 8px;
+    }
+    .workspace-label {
+      align-self: flex-end;
+      font-size: 8pt;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-top: auto;
+    }
+    .hints-box {
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #fefce8;
+      border: 1px solid #fef08a;
+      border-radius: 8px;
+      font-size: 9pt;
+      color: #854d0e;
+    }
+    .hints-box ul {
+      margin: 4px 0 0 0;
+      padding-left: 18px;
+    }
+    .hints-box li {
+      margin-bottom: 2px;
+    }
+    .hints-title {
+      font-weight: bold;
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .problem-card {
@@ -450,9 +591,9 @@ export function generateWorksheetHtml(
 
   <div class="worksheet-content">
     <div class="header">
-      <h1 class="title">${escapeHtml(meta.mathConcept)}</h1>
+      <h1 class="title">${escapeHtml(sheetTitle)}</h1>
       <div class="subtitle">
-        Grade ${escapeHtml(meta.gradeLevel)} &bull; ${escapeHtml(levelName)} &bull; ${escapeHtml(viewTitle)}
+        ${sheetSubtitle}
         ${meta.context ? ` &bull; Theme: ${escapeHtml(meta.context)}` : ''}
       </div>
       ${studentHeaderFields}
@@ -520,9 +661,10 @@ export function downloadWorksheetHtml(
   content: GeneratedProblem,
   level: DifferentiationLevel,
   view: 'student' | 'teacher',
-  meta: PrintMeta
+  meta: PrintMeta,
+  renderSettings?: RenderSettings
 ): void {
-  const html = generateWorksheetHtml(content, level, view, meta);
+  const html = generateWorksheetHtml(content, level, view, meta, renderSettings);
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);
   const cleanConcept = (meta.mathConcept || 'Worksheet').replace(/[^a-z0-9]/gi, '-');
@@ -549,9 +691,10 @@ export function printWorksheetDocument(
   content: GeneratedProblem,
   level: DifferentiationLevel,
   view: 'student' | 'teacher',
-  meta: PrintMeta
+  meta: PrintMeta,
+  renderSettings?: RenderSettings
 ): { success: boolean; fallbackUsed?: boolean; error?: string } {
-  const fullHtml = generateWorksheetHtml(content, level, view, meta);
+  const fullHtml = generateWorksheetHtml(content, level, view, meta, renderSettings);
 
   // 1. Locate or create #print-area
   let printArea = document.getElementById('print-area');

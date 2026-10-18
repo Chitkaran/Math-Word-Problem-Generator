@@ -142,7 +142,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             <div className="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
               <Lightbulb className="w-4 h-4" />
             </div>
-            <label htmlFor="mathConcept" className="font-extrabold text-slate-900 text-base">
+            <label 
+              htmlFor="mathConcept" 
+              className="text-slate-900"
+              style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'normal', fontSize: '20px' }}
+            >
               Topic
             </label>
           </div>
@@ -167,7 +171,10 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
             <div className="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
               <Compass className="w-4 h-4" />
             </div>
-            <span className="font-extrabold text-slate-900 text-base">
+            <span 
+              className="text-slate-900"
+              style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'normal', fontSize: '20px' }}
+            >
               Genre
             </span>
           </div>
@@ -206,7 +213,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               <div className="w-7 h-7 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
                 <GraduationCap className="w-4 h-4" />
               </div>
-              <label htmlFor="gradeLevel" className="font-extrabold text-slate-900 text-sm">
+              <label 
+                htmlFor="gradeLevel" 
+                className="text-slate-900"
+                style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'normal', fontSize: '17px', fontStyle: 'normal' }}
+              >
                 Grade Level
               </label>
             </div>
@@ -233,7 +244,11 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
                 <BarChart2 className="w-4 h-4" />
               </div>
-              <label htmlFor="difficulty" className="font-extrabold text-slate-900 text-sm">
+              <label 
+                htmlFor="difficulty" 
+                className="text-slate-900"
+                style={{ fontFamily: 'Poppins, sans-serif', fontWeight: 'normal', fontSize: '17px' }}
+              >
                 Difficulty
               </label>
             </div>
@@ -260,7 +275,21 @@ export const SettingsForm: React.FC<SettingsFormProps> = ({
               <div className="w-7 h-7 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
                 <FileText className="w-4 h-4" />
               </div>
-              <label htmlFor="numberOfQuestions" className="font-extrabold text-slate-900 text-sm">
+              <label 
+                htmlFor="numberOfQuestions" 
+                className="text-slate-900 inline-block"
+                style={{ 
+                  fontFamily: 'Poppins, sans-serif', 
+                  fontWeight: 'normal', 
+                  fontSize: '16px',
+                  backgroundColor: '#afcaff',
+                  paddingLeft: '15px',
+                  paddingRight: '15px',
+                  paddingTop: '5px',
+                  paddingBottom: '5px',
+                  borderRadius: '30px'
+                }}
+              >
                 Number of Questions
               </label>
             </div>

@@ -108,11 +108,11 @@ export const TopTicker: React.FC<TopTickerProps> = ({
                 <button
                   type="button"
                   onClick={onOpenAdminArchive}
-                  className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100 transition-all cursor-pointer"
-                  title="Admin Vault"
+                  className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-amber-50 text-amber-900 border border-amber-300 hover:bg-amber-100 transition-all cursor-pointer shadow-2xs"
+                  title="Open Admin Panel (Users & Archive)"
                 >
-                  <ShieldCheck className="h-3 w-3 text-amber-600" />
-                  <span className="hidden sm:inline">Admin Vault</span>
+                  <ShieldCheck className="h-3.5 w-3.5 text-amber-600" />
+                  <span className="hidden sm:inline">Admin Panel</span>
                 </button>
               )}
 

@@ -1,17 +1,21 @@
 import React from 'react';
-import { Home, Bookmark, History, HelpCircle } from 'lucide-react';
+import { Home, Bookmark, History, HelpCircle, ShieldAlert } from 'lucide-react';
 import appLogoLarge from '../src/assets/images/app_logo_large_1790109432285.jpg';
 
 interface SidebarProps {
   activeTab: 'home' | 'saved' | 'history' | 'help';
   onSelectTab: (tab: 'home' | 'saved' | 'history' | 'help') => void;
   savedCount?: number;
+  isAdmin?: boolean;
+  onOpenAdminPanel?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
   activeTab,
   onSelectTab,
-  savedCount = 0
+  savedCount = 0,
+  isAdmin = false,
+  onOpenAdminPanel
 }) => {
   return (
     <aside className="w-full lg:w-64 xl:w-72 bg-white rounded-3xl p-5 xl:p-6 shadow-sm border border-slate-100 flex flex-col justify-between shrink-0 select-none">
@@ -92,6 +96,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <HelpCircle className="w-5 h-5 shrink-0" />
             <span>Help</span>
           </button>
+
+          {/* Admin Panel button for admin aiteachertools.ca@gmail.com */}
+          {isAdmin && onOpenAdminPanel && (
+            <button
+              type="button"
+              onClick={onOpenAdminPanel}
+              className="w-full flex items-center justify-between px-4 py-3 rounded-2xl font-bold text-sm bg-gradient-to-r from-amber-50 to-amber-100/60 hover:from-amber-100 hover:to-amber-200/80 text-amber-950 border border-amber-300/80 transition-all cursor-pointer shadow-xs mt-3 group"
+              title="Open Admin Panel (Registered Users & Generations Vault)"
+            >
+              <div className="flex items-center gap-3.5">
+                <ShieldAlert className="w-5 h-5 text-amber-600 group-hover:scale-110 transition-transform shrink-0" />
+                <span>Admin Panel</span>
+              </div>
+              <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase bg-amber-200 text-amber-900 border border-amber-300">
+                Admin
+              </span>
+            </button>
+          )}
         </nav>
       </div>
 

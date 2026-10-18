@@ -63,7 +63,7 @@
     },
     "/global_generations/{generationId}": {
       "schema": "GlobalGeneration",
-      "description": "Complete global archive of all teacher generations, viewable only by chitkaran@gmail.com."
+      "description": "Complete global archive of all teacher generations, viewable only by aiteachertools.ca@gmail.com."
     }
   }
 }

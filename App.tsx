@@ -9,7 +9,7 @@ import { AdminArchiveModal } from './components/AdminArchiveModal';
 import { UserAreaModal } from './components/UserAreaModal';
 import { GenerationSuccessModal } from './components/GenerationSuccessModal';
 import { GeneratingPopupModal } from './components/GeneratingPopupModal';
-import type { FormState, GeneratedProblem, UserProfile } from './types';
+import type { FormState, GeneratedProblem, UserProfile, RenderSettings } from './types';
 import { generateWordProblemsStream } from './services/geminiService';
 import { printWorksheetDocument } from './services/printService';
 import { DEFAULT_FORM_STATE } from './constants';
@@ -63,9 +63,11 @@ export default function App() {
     }
   };
 
-  // Check if current user is admin chitkaran@gmail.com
+  // Check if current user is admin (aiteachertools.ca@gmail.com)
   const isAdmin = Boolean(
-    user?.email && user.email.toLowerCase() === 'chitkaran@gmail.com'
+    user?.email &&
+    (user.email.toLowerCase() === 'aiteachertools.ca@gmail.com' ||
+     user.email.toLowerCase() === 'chitkaran@gmail.com')
   );
 
   // Auth Listener
@@ -368,7 +370,7 @@ export default function App() {
       // Save to teacher's personal workspace
       if (user) {
         await saveWorksheet(content);
-        // Also archive every word problem globally for admin (chitkaran@gmail.com) review
+        // Also archive every word problem globally for admin (aiteachertools.ca@gmail.com) review
         await saveToGlobalArchive(content);
 
         // Deduct/increment quota for teacher
@@ -417,7 +419,7 @@ export default function App() {
     }
   }, [formState, user, userProfile]);
 
-  const handlePrint = () => {
+  const handlePrint = (renderSettings?: RenderSettings) => {
     if (generatedContent) {
       printWorksheetDocument(
         generatedContent,
@@ -428,7 +430,8 @@ export default function App() {
           gradeLevel: formState.gradeLevel,
           numberOfQuestions: formState.numberOfQuestions,
           context: formState.context
-        }
+        },
+        renderSettings
       );
     } else {
       window.print();
@@ -478,6 +481,8 @@ export default function App() {
                 activeTab={sidebarTab}
                 onSelectTab={handleSelectTab}
                 savedCount={history.length}
+                isAdmin={isAdmin}
+                onOpenAdminPanel={() => setIsAdminArchiveOpen(true)}
               />
             </div>
 
@@ -556,7 +561,7 @@ export default function App() {
           <GoogleSignInModal onSuccess={() => setShowSignInModal(false)} />
         )}
 
-        {/* 5. ADMIN ARCHIVE VAULT MODAL (Only rendered & viewable by chitkaran@gmail.com) */}
+        {/* 5. ADMIN ARCHIVE VAULT MODAL (Only rendered & viewable by aiteachertools.ca@gmail.com) */}
         {isAdmin && (
           <AdminArchiveModal
             isOpen={isAdminArchiveOpen}

@@ -59,6 +59,19 @@ export const HelpModal: React.FC<HelpModalProps> = ({ isOpen, onClose }) => {
               Every worksheet is generated with questions on the left (30%) and curved working space boxes on the right (70%), accompanied by comprehensive teacher answer keys.
             </p>
           </div>
+
+          <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200 text-amber-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+            <div>
+              <p className="font-bold text-xs">Need curriculum support or custom prompts?</p>
+              <p className="text-[11px] text-amber-800">Email our educator assistance desk anytime</p>
+            </div>
+            <a
+              href="mailto:aiteachertools.ca@gmail.com"
+              className="text-xs font-black text-amber-950 bg-amber-200/80 hover:bg-amber-200 px-3 py-1.5 rounded-xl border border-amber-300 transition-colors"
+            >
+              aiteachertools.ca@gmail.com
+            </a>
+          </div>
         </div>
 
         <div className="mt-6 pt-4 border-t border-slate-100 flex justify-end">
